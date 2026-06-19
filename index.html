@@ -1001,6 +1001,142 @@ width: 5px; height: 5px;
 background: var(--gold);
 border-radius: 50%;
 }
+/* ============ PLAYLIST PLAYER ============ */
+.playlist-container {
+display: flex;
+flex-direction: column;
+gap: 10px;
+max-height: 400px;
+overflow-y: auto;
+padding-right: 5px;
+}
+
+.playlist-container::-webkit-scrollbar {
+width: 6px;
+}
+
+.playlist-container::-webkit-scrollbar-track {
+background: rgba(255,255,255,0.05);
+border-radius: 10px;
+}
+
+.playlist-container::-webkit-scrollbar-thumb {
+background: var(--rose);
+border-radius: 10px;
+}
+
+.playlist-item {
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: rgba(255,255,255,0.04);
+border: 1px solid var(--glass-border);
+border-radius: 12px;
+padding: 12px 14px;
+transition: all 0.3s;
+cursor: pointer;
+}
+
+.playlist-item:hover {
+background: rgba(255,255,255,0.08);
+border-color: var(--rose);
+transform: translateX(4px);
+}
+
+.playlist-item.playing {
+background: linear-gradient(135deg, rgba(194,24,91,0.2), rgba(212,165,116,0.1));
+border-color: var(--rose);
+}
+
+.music-info {
+display: flex;
+align-items: center;
+gap: 10px;
+flex: 1;
+overflow: hidden;
+}
+
+.music-icon {
+font-size: 18px;
+flex-shrink: 0;
+}
+
+.music-name {
+font-size: 13px;
+color: var(--text);
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.music-play-btn {
+width: 36px;
+height: 36px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(--rose-deep), var(--rose));
+border: none;
+color: white;
+font-size: 14px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+transition: all 0.3s;
+box-shadow: 0 2px 10px rgba(194,24,91,0.3);
+}
+
+.music-play-btn:hover {
+transform: scale(1.1);
+box-shadow: 0 4px 15px rgba(194,24,91,0.5);
+}
+
+.music-play-btn:active {
+transform: scale(0.95);
+}
+
+.music-play-btn.playing {
+animation: pulseMusic 1s ease-in-out infinite;
+}
+
+@keyframes pulseMusic {
+0%, 100% { transform: scale(1); box-shadow: 0 2px 10px rgba(194,24,91,0.3); }
+50% { transform: scale(1.05); box-shadow: 0 4px 20px rgba(194,24,91,0.6); }
+}
+
+/* Visualizer animation */
+.music-visualizer {
+display: none;
+align-items: flex-end;
+gap: 2px;
+height: 20px;
+margin-left: 8px;
+}
+
+.playlist-item.playing .music-visualizer {
+display: flex;
+}
+
+.playlist-item.playing .music-icon {
+display: none;
+}
+
+.visualizer-bar {
+width: 3px;
+background: var(--rose);
+border-radius: 2px;
+animation: visualize 0.5s ease-in-out infinite;
+}
+
+.visualizer-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+.visualizer-bar:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.visualizer-bar:nth-child(3) { height: 10px; animation-delay: 0.2s; }
+.visualizer-bar:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+
+@keyframes visualize {
+0%, 100% { transform: scaleY(0.5); }
+50% { transform: scaleY(1); }
+}
 </style>
 </head>
 <body>
@@ -1363,6 +1499,7 @@ Seu navegador não suporta vídeo.
 </audio>
 
 <script>
+  
 // ============ LOADING ============
 window.addEventListener('load', () => {
 setTimeout(() => {
@@ -1754,7 +1891,41 @@ if (a.getAttribute('href') === '#' + current) a.classList.add('active');
 // ============ MODALS ============
 const modalData = {
 reasons: { emoji: '💌', title: 'Por Que Te Amo', text: '<p style="line-height:1.9">💖 <em>Seu sorriso</em> - ilumina tudo<br>🌙 <em>Seu abraço</em> - meu lugar seguro<br>✨ <em>Seu olhar</em> - me faz esquecer o mundo<br>🎵 <em>Sua risada</em> - a melhor melodia<br>🌹 <em>Seu carinho</em> - me faz especial<br>💫 <em>Seu jeito</em> - único e perfeito<br>❤️ <em>Você inteira</em> - é tudo pra mim</p>' },
-playlist: { emoji: '🎵', title: 'Nossa Playlist', text: '<p style="line-height:1.9; text-align:left;">🎵 Perfect - Ed Sheeran<br>🎵 All of Me - John Legend<br>🎵 eu e minha casa - julliany souza<br>🎵 A Thousand Years - Christina Perri<br>🎵 Thinking Out Loud - Ed Sheeran<br>🎵 Can\'t Help Falling in Love - Elvis<br>🎵 Make You Feel My Love - Adele<br><div class="sparkle-divider"><span></span><div class="dot"></div><span></span></div><p style="font-size:12px">Cada música me lembra você 💕</p></p>' },
+playlist: { 
+emoji: '🎵', 
+title: 'Nossa Playlist', 
+text: '<div class="playlist-container" id="playlistContainer">' +
+'<div class="playlist-item" data-music="music/perfect.mp3">' +
+'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">Perfect - Ed Sheeran</span></div>' +
+'<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'</div>' +
+'<div class="playlist-item" data-music="music/all-of-me.mp3">' +
+'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">All of Me - John Legend</span></div>' +
+'<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'</div>' +
+'<div class="playlist-item" data-music="music/eu-e-minha-casa.mp3">' +
+'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">eu e minha casa - Julliany Souza</span></div>' +
+'<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'</div>' +
+'<div class="playlist-item" data-music="music/thousand-years.mp3">' +
+'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">A Thousand Years - Christina Perri</span></div>' +
+'<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'</div>' +
+'<div class="playlist-item" data-music="music/thinking-out-loud.mp3">' +
+'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">Thinking Out Loud - Ed Sheeran</span></div>' +
+'<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'</div>' +
+'<div class="playlist-item" data-music="music/cant-help.mp3">' +
+'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">Can\'t Help Falling in Love - Elvis</span></div>' +
+'<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'</div>' +
+'<div class="playlist-item" data-music="music/make-you-feel.mp3">' +
+'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">Make You Feel My Love - Adele</span></div>' +
+'<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'</div>' +
+'</div><div class="sparkle-divider"><span></span><div class="dot"></div><span></span></div><p style="font-size:12px;margin-top:15px">Cada música me lembra você 💕</p>' +
+'<audio id="playlistAudio" preload="auto"></audio>'
+},
 promise: { emoji: '🤞', title: 'Minhas Promessas', text: '<p style="line-height:1.9">🌹 Prometo te fazer <em>sorrir</em> todos os dias<br>🌙 Prometo ser seu <em>porto seguro</em><br>✨ Prometo <em>te ouvir</em> sempre<br>💫 Prometo <em>te apoiar</em> nos seus sonhos<br>💖 Prometo te <em>amar</em> a cada segundo<br>💍 Prometo ser <em>seu</em> para sempre</p>' },
 secret: { emoji: '🤫', title: 'Segredo Especial', text: '<p style="line-height:1.8">Sabia que desde o primeiro dia que te vi, eu já sabia que você seria <em>alguém muito especial</em> na minha vida? 💫<br><br>Cada dia que passa, eu tenho mais certeza de que você é <em>a pessoa certa</em> pra mim. ❤️<br><br>E esse site... foi feito com todo o <em>meu amor</em> especialmente pra você. Cada detalhe pensado em <em>como te fazer feliz</em>. 🌹<br><br><em>Você é o meu maior orgulho.</em> 💖</p>' }
 };
@@ -1782,6 +1953,68 @@ if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 document.addEventListener('keydown', (e) => {
 if (e.key === 'Escape') { closeModal(); closeLightbox(); }
 if (e.key === 'm' || e.key === 'M') toggleMusic();
+});
+
+// ============ PLAYLIST MUSIC PLAYER ============
+let currentPlaylistMusic = null;
+let isPlaylistPlaying = false;
+
+function togglePlaylistMusic(btn) {
+const playlistItem = btn.closest('.playlist-item');
+const musicSrc = playlistItem.getAttribute('data-music');
+const audio = document.getElementById('playlistAudio');
+const allItems = document.querySelectorAll('.playlist-item');
+const allBtns = document.querySelectorAll('.music-play-btn');
+
+// Se clicar na mesma música que está tocando
+if (currentPlaylistMusic === playlistItem && isPlaylistPlaying) {
+audio.pause();
+btn.textContent = '▶';
+btn.classList.remove('playing');
+playlistItem.classList.remove('playing');
+isPlaylistPlaying = false;
+currentPlaylistMusic = null;
+return;
+}
+
+// Para todas as outras músicas
+allItems.forEach(item => item.classList.remove('playing'));
+allBtns.forEach(b => {
+b.textContent = '▶';
+b.classList.remove('playing');
+});
+
+// Toca a nova música
+audio.src = musicSrc;
+audio.volume = 0.3;
+audio.play().then(() => {
+currentPlaylistMusic = playlistItem;
+isPlaylistPlaying = true;
+btn.textContent = '⏸';
+btn.classList.add('playing');
+playlistItem.classList.add('playing');
+}).catch(err => {
+console.log('Erro ao tocar música:', err);
+alert('🎵 Clique novamente para ativar o áudio');
+});
+}
+
+// Quando a música terminar
+document.addEventListener('DOMContentLoaded', () => {
+const audio = document.getElementById('playlistAudio');
+if (audio) {
+audio.addEventListener('ended', () => {
+const allBtns = document.querySelectorAll('.music-play-btn');
+const allItems = document.querySelectorAll('.playlist-item');
+allBtns.forEach(b => {
+b.textContent = '▶';
+b.classList.remove('playing');
+});
+allItems.forEach(item => item.classList.remove('playing'));
+isPlaylistPlaying = false;
+currentPlaylistMusic = null;
+});
+}
 });
 </script>
 </body>
