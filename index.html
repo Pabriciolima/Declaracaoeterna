@@ -1,7 +1,8 @@
+<!DOCTYPE html>
+<html lang="pt">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-<!-- PREVENIR CACHE - ADICIONE ISSO -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -20,6 +21,8 @@
 --glass-border: rgba(255,255,255,0.12);
 --text: #f5e6e0;
 --text-muted: rgba(245,230,224,0.6);
+--shadow-premium: 0 20px 60px rgba(0,0,0,0.6);
+--gradient-premium: linear-gradient(135deg, var(--rose-deep), var(--gold));
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
@@ -1314,6 +1317,266 @@ transition: all 0.3s;
 @media (max-width: 480px) {
 .theme-toggle { top: 65px; right: 15px; width: 40px; height: 40px; font-size: 18px; }
 }
+/* ============ NOVAS FUNCIONALIDADES PREMIUM ============ */
+/* 1. Música ambiente com controle de volume */
+.volume-control {
+position: fixed;
+bottom: 80px;
+right: 20px;
+z-index: 999;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 6px;
+opacity: 0;
+transition: opacity 0.3s;
+}
+.volume-control.show { opacity: 1; }
+.volume-slider {
+width: 80px;
+height: 4px;
+-webkit-appearance: none;
+appearance: none;
+background: var(--glass-border);
+border-radius: 2px;
+outline: none;
+}
+.volume-slider::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 14px;
+height: 14px;
+border-radius: 50%;
+background: var(--rose);
+cursor: pointer;
+}
+.volume-label {
+font-size: 9px;
+color: var(--text-muted);
+letter-spacing: 1px;
+}
+/* 2. Botão flutuante "Topo" */
+.scroll-top-btn {
+position: fixed;
+bottom: 90px;
+right: 20px;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: var(--glass);
+backdrop-filter: blur(20px);
+border: 1px solid var(--glass-border);
+color: var(--text);
+font-size: 20px;
+cursor: pointer;
+z-index: 999;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.3s;
+opacity: 0;
+visibility: hidden;
+}
+.scroll-top-btn.show {
+opacity: 1;
+visibility: visible;
+}
+.scroll-top-btn:active { transform: scale(0.9); }
+/* 3. Indicador de leitura */
+.reading-progress {
+position: fixed;
+top: 0;
+left: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--rose), var(--gold));
+z-index: 9999;
+width: 0%;
+transition: width 0.1s;
+}
+/* 4. Modo foco (escurece tudo menos a seção atual) */
+body.focus-mode .parallax-bg,
+body.focus-mode .parallax-overlay,
+body.focus-mode #particles-canvas,
+body.focus-mode .floating-hearts { opacity: 0.15; }
+body.focus-mode section:not(.focus-section) { opacity: 0.2; pointer-events: none; }
+body.focus-mode section.focus-section { opacity: 1; }
+.focus-toggle {
+position: fixed;
+top: 120px;
+right: 20px;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: var(--glass);
+backdrop-filter: blur(20px);
+border: 1px solid var(--glass-border);
+color: var(--text);
+font-size: 18px;
+cursor: pointer;
+z-index: 1000;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.3s;
+}
+@media (max-width: 480px) {
+.focus-toggle { top: 115px; right: 15px; width: 38px; height: 38px; font-size: 16px; }
+}
+/* 5. Aniversário diário com mensagem especial */
+.daily-message {
+position: fixed;
+bottom: 100px;
+left: 50%;
+transform: translateX(-50%);
+background: var(--glass);
+backdrop-filter: blur(20px);
+border: 1px solid var(--glass-border);
+padding: 10px 20px;
+border-radius: 30px;
+font-size: 12px;
+color: var(--gold-light);
+z-index: 500;
+opacity: 0;
+transition: all 0.5s;
+pointer-events: none;
+text-align: center;
+max-width: 90%;
+}
+.daily-message.show {
+opacity: 1;
+bottom: 120px;
+}
+/* 6. Galeria com modo carrossel */
+.carousel-modal {
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: rgba(0,0,0,0.95);
+z-index: 2600;
+display: none;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+padding: 20px;
+}
+.carousel-modal.active { display: flex; }
+.carousel-modal img {
+max-width: 90%;
+max-height: 70vh;
+border-radius: 12px;
+box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+.carousel-nav {
+display: flex;
+gap: 30px;
+margin-top: 20px;
+}
+.carousel-nav button {
+background: var(--glass);
+border: 1px solid var(--glass-border);
+color: white;
+width: 48px;
+height: 48px;
+border-radius: 50%;
+font-size: 20px;
+cursor: pointer;
+}
+.carousel-close {
+position: absolute;
+top: 20px; right: 20px;
+background: var(--glass);
+border: 1px solid var(--glass-border);
+color: white;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+font-size: 20px;
+cursor: pointer;
+}
+/* 7. Compartilhar momento */
+.share-btn {
+position: fixed;
+bottom: 90px;
+left: 20px;
+z-index: 1000;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: var(--glass);
+backdrop-filter: blur(20px);
+border: 1px solid var(--glass-border);
+color: var(--text);
+font-size: 18px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.3s;
+}
+.share-btn:active { transform: scale(0.9); }
+/* 8. Efeito de brilho nos cards premium */
+.glow-card {
+position: relative;
+overflow: hidden;
+}
+.glow-card::after {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(circle, rgba(212,165,116,0.05) 0%, transparent 70%);
+pointer-events: none;
+}
+/* 9. Contador de beijos */
+.kiss-counter {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 14px;
+color: var(--rose);
+}
+.kiss-counter button {
+background: var(--glass);
+border: 1px solid var(--glass-border);
+color: var(--text);
+border-radius: 50%;
+width: 30px;
+height: 30px;
+cursor: pointer;
+font-size: 14px;
+}
+/* 10. Jogo da memória */
+.memory-game-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 8px;
+max-width: 400px;
+width: 100%;
+margin: 0 auto;
+}
+.memory-card {
+aspect-ratio: 1;
+background: var(--glass);
+border: 1px solid var(--glass-border);
+border-radius: 12px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 28px;
+cursor: pointer;
+transition: all 0.3s;
+user-select: none;
+}
+.memory-card.flipped {
+background: var(--rose);
+border-color: var(--gold);
+}
+.memory-card.matched {
+opacity: 0.4;
+pointer-events: none;
+}
 </style>
 </head>
 <body>
@@ -1322,15 +1585,21 @@ transition: all 0.3s;
 <div class="parallax-bg" id="parallax2" style="background-image: url('bg/bg2.jpg');"></div>
 <div class="parallax-bg" id="parallax3" style="background-image: url('bg/bg3.jpg');"></div>
 <div class="parallax-overlay"></div>
+
+<!-- READING PROGRESS -->
+<div class="reading-progress" id="readingProgress"></div>
+
 <!-- LOADING -->
 <div class="loading-screen" id="loadingScreen">
 <div class="loading-heart">💖</div>
 <div class="loading-text">Nossa história...</div>
 <div class="loading-bar"><div class="loading-bar-fill"></div></div>
 </div>
+
 <!-- FLOATING HEARTS -->
 <div class="floating-hearts" id="floatingHearts"></div>
 <canvas id="particles-canvas"></canvas>
+
 <!-- NAVIGATION -->
 <nav class="nav" id="navbar">
 <a href="#hero" class="active">Início</a>
@@ -1340,6 +1609,7 @@ transition: all 0.3s;
 <a href="#timeline">Momentos</a>
 <a href="#letter">Carta</a>
 </nav>
+
 <!-- MUSIC PLAYER -->
 <div class="music-player">
 <div class="now-playing" id="nowPlaying">🎵 Nossa Música</div>
@@ -1347,8 +1617,31 @@ transition: all 0.3s;
 <span id="musicIcon">▶</span>
 </button>
 </div>
-<!-- PREMIUM: Toggle Tema -->
+
+<!-- CONTROLE DE VOLUME -->
+<div class="volume-control" id="volumeControl">
+<span class="volume-label">🔊</span>
+<input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="30">
+</div>
+
+<!-- TOPO -->
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- FOCUS MODE -->
+<button class="focus-toggle" id="focusToggle" onclick="toggleFocusMode()" title="Modo Foco">◎</button>
+
+<!-- SHARE -->
+<button class="share-btn" onclick="sharePage()" title="Compartilhar">📤</button>
+
+<!-- DAILY MESSAGE -->
+<div class="daily-message" id="dailyMessage"></div>
+
+<!-- THEME TOGGLE -->
 <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Mudar tema">🌙</button>
+
+<!-- VINIL -->
+<div class="vinyl-container" id="vinyl" onclick="toggleMusic()"></div>
+
 <!-- ==================== HERO ==================== -->
 <section class="hero" id="hero">
 <div class="hero-badge">💍 OFICIALMENTE JUNTOS 💍</div>
@@ -1361,6 +1654,7 @@ transition: all 0.3s;
 <div class="scroll-arrow"></div>
 </div>
 </section>
+
 <!-- ==================== COUNTER ==================== -->
 <section id="counter">
 <div class="fade-in">
@@ -1368,22 +1662,28 @@ transition: all 0.3s;
 <h2 class="section-title">Juntos há</h2>
 </div>
 <div class="counter-grid fade-in">
-<div class="counter-card"><div class="counter-number" id="cYears">0</div><div class="counter-label">Anos</div><div class="counter-emoji">💕</div></div>
-<div class="counter-card"><div class="counter-number" id="cMonths">0</div><div class="counter-label">Meses</div><div class="counter-emoji">🌙</div></div>
-<div class="counter-card"><div class="counter-number" id="cWeeks">0</div><div class="counter-label">Semanas</div><div class="counter-emoji">📅</div></div>
-<div class="counter-card"><div class="counter-number" id="cDays">0</div><div class="counter-label">Dias</div><div class="counter-emoji">☀️</div></div>
-<div class="counter-card"><div class="counter-number" id="cHours">0</div><div class="counter-label">Horas</div><div class="counter-emoji">⏰</div></div>
-<div class="counter-card"><div class="counter-number" id="cMinutes">0</div><div class="counter-label">Minutos</div><div class="counter-emoji">💫</div></div>
-<div class="counter-card"><div class="counter-number" id="cSeconds">0</div><div class="counter-label">Segundos</div><div class="counter-emoji">✨</div></div>
+<div class="counter-card glow-card"><div class="counter-number" id="cYears">0</div><div class="counter-label">Anos</div><div class="counter-emoji">💕</div></div>
+<div class="counter-card glow-card"><div class="counter-number" id="cMonths">0</div><div class="counter-label">Meses</div><div class="counter-emoji">🌙</div></div>
+<div class="counter-card glow-card"><div class="counter-number" id="cWeeks">0</div><div class="counter-label">Semanas</div><div class="counter-emoji">📅</div></div>
+<div class="counter-card glow-card"><div class="counter-number" id="cDays">0</div><div class="counter-label">Dias</div><div class="counter-emoji">☀️</div></div>
+<div class="counter-card glow-card"><div class="counter-number" id="cHours">0</div><div class="counter-label">Horas</div><div class="counter-emoji">⏰</div></div>
+<div class="counter-card glow-card"><div class="counter-number" id="cMinutes">0</div><div class="counter-label">Minutos</div><div class="counter-emoji">💫</div></div>
+<div class="counter-card glow-card"><div class="counter-number" id="cSeconds">0</div><div class="counter-label">Segundos</div><div class="counter-emoji">✨</div></div>
+</div>
+<!-- KISS COUNTER -->
+<div class="kiss-counter" style="margin-top:20px;justify-content:center;">
+<button onclick="addKiss()">💋</button>
+<span id="kissCount">0</span> beijos trocados
 </div>
 </section>
-<!-- ==================== VIDEO DO PEDIDO ==================== -->
+
+<!-- ==================== VIDEO ==================== -->
 <section id="video">
 <div class="fade-in">
 <div class="section-label">O Momento Mágico</div>
 <h2 class="section-title">O Vídeo do Pedido 💍</h2>
 </div>
-<div class="video-container fade-in">
+<div class="video-container fade-in glow-card">
 <div class="video-wrapper">
 <video id="proposalVideo" controls preload="metadata" poster="">
 <source src="videos/pedido.mp4" type="video/mp4">
@@ -1394,26 +1694,26 @@ Seu navegador não suporta vídeo.
 <div class="video-sub">12 de Junho de 2026</div>
 </div>
 </section>
+
 <!-- ==================== GALLERY ==================== -->
 <section id="gallery">
 <div class="fade-in">
 <div class="section-label">Nossas Memórias</div>
 <h2 class="section-title">Galeria de Fotos 📸</h2>
 </div>
-<div class="gallery-grid fade-in" id="galleryGrid">
-<!-- Fotos serão adicionadas via JS -->
-</div>
+<div class="gallery-grid fade-in" id="galleryGrid"></div>
+<button style="margin-top:16px;background:var(--glass);border:1px solid var(--glass-border);color:var(--text);padding:8px 20px;border-radius:30px;cursor:pointer;font-size:12px;" onclick="openCarousel()">Ver todas em carrossel →</button>
 </section>
+
 <!-- ==================== NEXT DATES ==================== -->
 <section id="dates">
 <div class="fade-in">
 <div class="section-label">Próximos Marcos</div>
 <h2 class="section-title">Datas Especiais 📅</h2>
 </div>
-<div class="dates-grid fade-in" id="datesGrid">
-<!-- Preenchido via JS -->
-</div>
+<div class="dates-grid fade-in" id="datesGrid"></div>
 </section>
+
 <!-- ==================== TIMELINE ==================== -->
 <section id="timeline">
 <div class="fade-in">
@@ -1459,13 +1759,14 @@ Seu navegador não suporta vídeo.
 </div>
 </div>
 </section>
+
 <!-- ==================== MEMORY MAP ==================== -->
 <section id="memories">
 <div class="fade-in">
 <div class="section-label">Lugares Especiais</div>
 <h2 class="section-title">Mapa de Memórias 🗺️</h2>
 </div>
-<div class="memory-map fade-in">
+<div class="memory-map fade-in glow-card">
 <div class="memory-item">
 <div class="memory-pin">📍</div>
 <div class="memory-info">
@@ -1500,25 +1801,27 @@ Seu navegador não suporta vídeo.
 </div>
 </div>
 </section>
+
 <!-- ==================== QUIZ ==================== -->
 <section id="quiz">
 <div class="fade-in">
 <div class="section-label">Diversão a Dois</div>
 <h2 class="section-title">Quiz do Casal 💘</h2>
 </div>
-<div class="quiz-container fade-in">
+<div class="quiz-container fade-in glow-card">
 <div class="quiz-question" id="quizQuestion">Carregando...</div>
 <div class="quiz-options" id="quizOptions"></div>
 <div class="quiz-score" id="quizScore">Acertos: 0 / 0</div>
 <button class="quiz-next" id="quizNext" onclick="nextQuestion()" style="display:none;">Próxima Pergunta →</button>
 </div>
 </section>
+
 <!-- ==================== LOVE LETTER ==================== -->
 <section id="letter">
 <div class="letter-container fade-in">
 <div class="section-label">De Coração</div>
 <h2 class="section-title" style="margin-bottom:20px;">Uma Carta pra Você</h2>
-<div class="letter-paper">
+<div class="letter-paper glow-card">
 <div class="letter-greeting">Meu Amor,</div>
 <div class="letter-body">
 <p>Desde o dia <em>04 de abril</em>, minha vida ganhou uma nova cor. Cada momento ao seu lado é um presente que eu jamais poderia imaginar receber.</p>
@@ -1530,16 +1833,16 @@ Seu navegador não suporta vídeo.
 </div>
 </div>
 </section>
+
 <!-- ==================== ACHIEVEMENTS ==================== -->
 <section id="achievements">
 <div class="fade-in">
 <div class="section-label">Conquistas</div>
 <h2 class="section-title">Árvore do Nosso Amor 🏆</h2>
 </div>
-<div class="achievements-grid fade-in" id="achievementsGrid">
-<!-- Preenchido via JS -->
-</div>
+<div class="achievements-grid fade-in" id="achievementsGrid"></div>
 </section>
+
 <!-- ==================== ABRIR QUANDO ==================== -->
 <section id="openwhen">
 <div class="fade-in">
@@ -1573,17 +1876,32 @@ Seu navegador não suporta vídeo.
 </div>
 </div>
 </section>
+
+<!-- ==================== JOGO DA MEMÓRIA ==================== -->
+<section id="memorygame">
+<div class="fade-in">
+<div class="section-label">Diversão</div>
+<h2 class="section-title">Jogo da Memória 🧩</h2>
+</div>
+<div class="memory-game-grid" id="memoryGameGrid"></div>
+<div style="margin-top:16px;text-align:center;">
+<span id="memoryMoves">0</span> movimentos
+<button style="background:var(--glass);border:1px solid var(--glass-border);color:var(--text);padding:6px 16px;border-radius:20px;margin-left:12px;cursor:pointer;" onclick="initMemoryGame()">🔄 Reiniciar</button>
+</div>
+</section>
+
 <!-- ==================== RANDOM MESSAGE ==================== -->
 <section id="message">
 <div class="fade-in">
 <div class="section-label">Uma Frase pra Você</div>
 <h2 class="section-title">Mensagem do Coração 💭</h2>
 </div>
-<div class="message-box fade-in">
+<div class="message-box fade-in glow-card">
 <div class="message-text" id="messageText">Clique no botão para receber uma mensagem especial 💖</div>
 <button class="message-btn" onclick="newMessage()">✨ Nova Mensagem</button>
 </div>
 </section>
+
 <!-- ==================== 10 REASONS ==================== -->
 <section>
 <div class="fade-in">
@@ -1591,18 +1909,19 @@ Seu navegador não suporta vídeo.
 <h2 class="section-title">10 Motivos Pelo Que Te Amo</h2>
 </div>
 <div class="reasons-grid fade-in">
-<div class="reason-card"><div class="reason-number">01</div><div class="reason-text">Seu sorriso ilumina até meus dias mais difíceis.</div></div>
-<div class="reason-card"><div class="reason-number">02</div><div class="reason-text">Seu riso é a melodia mais bonita do mundo.</div></div>
-<div class="reason-card"><div class="reason-number">03</div><div class="reason-text">Você me entende como ninguém.</div></div>
-<div class="reason-card"><div class="reason-number">04</div><div class="reason-text">Seu abraço é meu lugar seguro.</div></div>
-<div class="reason-card"><div class="reason-number">05</div><div class="reason-text">Você me inspira a ser uma pessoa melhor.</div></div>
-<div class="reason-card"><div class="reason-number">06</div><div class="reason-text">Cada momento com você é uma aventura.</div></div>
-<div class="reason-card"><div class="reason-number">07</div><div class="reason-text">Seu carinho me faz sentir especial.</div></div>
-<div class="reason-card"><div class="reason-number">08</div><div class="reason-text">Você é minha melhor amiga.</div></div>
-<div class="reason-card"><div class="reason-number">09</div><div class="reason-text">Você é minha razão para continuar sorrindo.</div></div>
-<div class="reason-card"><div class="reason-number">10</div><div class="reason-text">Porque simplesmente você é você. 💖</div></div>
+<div class="reason-card glow-card"><div class="reason-number">01</div><div class="reason-text">Seu sorriso ilumina até meus dias mais difíceis.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">02</div><div class="reason-text">Seu riso é a melodia mais bonita do mundo.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">03</div><div class="reason-text">Você me entende como ninguém.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">04</div><div class="reason-text">Seu abraço é meu lugar seguro.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">05</div><div class="reason-text">Você me inspira a ser uma pessoa melhor.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">06</div><div class="reason-text">Cada momento com você é uma aventura.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">07</div><div class="reason-text">Seu carinho me faz sentir especial.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">08</div><div class="reason-text">Você é minha melhor amiga.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">09</div><div class="reason-text">Você é minha razão para continuar sorrindo.</div></div>
+<div class="reason-card glow-card"><div class="reason-number">10</div><div class="reason-text">Porque simplesmente você é você. 💖</div></div>
 </div>
 </section>
+
 <!-- ==================== SURPRISES ==================== -->
 <section class="surprise-section">
 <div class="fade-in">
@@ -1632,12 +1951,14 @@ Seu navegador não suporta vídeo.
 </button>
 </div>
 </section>
+
 <!-- ==================== FOOTER ==================== -->
 <footer class="footer">
 <div class="footer-heart">💖</div>
 <div class="footer-text">Para Sempre Juntos</div>
 <div class="footer-sub">04 • 04 • 2026 💍 12 • 06 • 2026</div>
 </footer>
+
 <!-- ==================== MODALS ==================== -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
 <div class="modal" id="modalContent">
@@ -1645,28 +1966,134 @@ Seu navegador não suporta vídeo.
 <div id="modalBody"></div>
 </div>
 </div>
+
 <!-- ==================== LIGHTBOX ==================== -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
 <button class="lightbox-close">✕</button>
 <img id="lightboxImg" src="" alt="">
 </div>
+
+<!-- ==================== CARROSSEL ==================== -->
+<div class="carousel-modal" id="carouselModal">
+<button class="carousel-close" onclick="closeCarousel()">✕</button>
+<img id="carouselImg" src="" alt="">
+<div class="carousel-nav">
+<button onclick="carouselPrev()">‹</button>
+<button onclick="carouselNext()">›</button>
+</div>
+</div>
+
 <!-- ==================== AUDIO ==================== -->
 <audio id="bgMusic" loop preload="auto">
 <source src="music/eu-e-minha-casa.mp3">
 </audio>
-<!-- Toast de notificação -->
+
+<!-- Toast -->
 <div class="audio-toast" id="audioToast"></div>
-<!-- PREMIUM: Disco Giratório -->
-<div class="vinyl-container" id="vinyl" onclick="toggleMusic()"></div>
 
 <script>
 // ============ LOADING ============
 window.addEventListener('load', () => {
 setTimeout(() => {
 document.getElementById('loadingScreen').classList.add('hidden');
+showDailyMessage();
+initMemoryGame();
 }, 2500);
 });
-// ============ PARALLAX BACKGROUND CHANGE ============
+
+// ============ READING PROGRESS ============
+window.addEventListener('scroll', () => {
+const scrollTop = window.scrollY;
+const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+document.getElementById('readingProgress').style.width = progress + '%';
+// Scroll top button
+const btn = document.getElementById('scrollTopBtn');
+if (scrollTop > 300) btn.classList.add('show');
+else btn.classList.remove('show');
+});
+
+// ============ VOLUME CONTROL ============
+const volumeSlider = document.getElementById('volumeSlider');
+const bgMusic = document.getElementById('bgMusic');
+volumeSlider.addEventListener('input', () => {
+bgMusic.volume = volumeSlider.value / 100;
+});
+
+// Mostrar controle de volume ao passar o mouse no player
+document.querySelector('.music-player').addEventListener('mouseenter', () => {
+document.getElementById('volumeControl').classList.add('show');
+});
+document.querySelector('.music-player').addEventListener('mouseleave', () => {
+document.getElementById('volumeControl').classList.remove('show');
+});
+
+// ============ DAILY MESSAGE ============
+function showDailyMessage() {
+const messages = [
+'💖 Cada dia com você é um presente.',
+'🌹 Você é o amor da minha vida.',
+'✨ Hoje é mais um dia especial ao seu lado.',
+'💕 Obrigado por existir na minha vida.',
+'🌟 Você ilumina meus dias.'
+];
+const msg = document.getElementById('dailyMessage');
+msg.textContent = messages[Math.floor(Math.random() * messages.length)];
+msg.classList.add('show');
+setTimeout(() => msg.classList.remove('show'), 8000);
+}
+setInterval(showDailyMessage, 30000);
+
+// ============ FOCUS MODE ============
+let focusMode = false;
+function toggleFocusMode() {
+focusMode = !focusMode;
+document.body.classList.toggle('focus-mode');
+document.getElementById('focusToggle').textContent = focusMode ? '⊕' : '◎';
+if (focusMode) {
+const sections = document.querySelectorAll('section');
+sections.forEach(s => s.classList.remove('focus-section'));
+const visible = document.querySelector('section:not(#hero)');
+if (visible) visible.classList.add('focus-section');
+} else {
+document.querySelectorAll('section').forEach(s => s.classList.remove('focus-section'));
+}
+}
+// Scroll para atualizar seção em foco
+document.addEventListener('scroll', () => {
+if (focusMode) {
+const sections = document.querySelectorAll('section');
+let closest = null;
+let closestDist = Infinity;
+sections.forEach(s => {
+const rect = s.getBoundingClientRect();
+const dist = Math.abs(rect.top);
+if (dist < closestDist) {
+closestDist = dist;
+closest = s;
+}
+});
+sections.forEach(s => s.classList.remove('focus-section'));
+if (closest) closest.classList.add('focus-section');
+}
+});
+
+// ============ SHARE ============
+function sharePage() {
+if (navigator.share) {
+navigator.share({
+title: '💖 Nossa História de Amor',
+text: 'Descubra a nossa história de amor! 💕',
+url: window.location.href
+});
+} else {
+navigator.clipboard.writeText(window.location.href).then(() => {
+showToast('Link copiado! 📋', '📤');
+});
+}
+}
+
+// ============ PARALLAX ============
 const parallaxBgs = document.querySelectorAll('.parallax-bg');
 let currentBg = 0;
 function changeParallax() {
@@ -1675,6 +2102,7 @@ currentBg = (currentBg + 1) % parallaxBgs.length;
 parallaxBgs[currentBg].classList.add('active');
 }
 setInterval(changeParallax, 8000);
+
 // ============ PARTICLES ============
 const canvas = document.getElementById('particles-canvas');
 const ctx = canvas.getContext('2d');
@@ -1717,6 +2145,7 @@ particles.forEach(p => { p.update(); p.draw(); });
 requestAnimationFrame(animateParticles);
 }
 animateParticles();
+
 // ============ FLOATING HEARTS ============
 function createFloatingHearts() {
 const container = document.getElementById('floatingHearts');
@@ -1733,9 +2162,10 @@ container.appendChild(heart);
 }
 }
 createFloatingHearts();
-// ============ CLICK HEARTS (NOVA FUNCIONALIDADE #10) ============
+
+// ============ CLICK HEARTS ============
 document.addEventListener('click', (e) => {
-const hearts = ['💖', '💕', '✨', '💗', '', '🌹'];
+const hearts = ['💖', '💕', '✨', '💗', '🌹', '💫'];
 for (let i = 0; i < 3; i++) {
 const heart = document.createElement('div');
 heart.className = 'click-heart';
@@ -1748,6 +2178,7 @@ document.body.appendChild(heart);
 setTimeout(() => heart.remove(), 1500);
 }
 });
+
 // ============ COUNTER ============
 const startDate = new Date('2026-04-04T00:00:00');
 function updateCounter() {
@@ -1773,7 +2204,18 @@ document.getElementById('cSeconds').textContent = totalSeconds.toLocaleString();
 }
 updateCounter();
 setInterval(updateCounter, 1000);
-// ============ GALLERY (NOVA FUNCIONALIDADE #3) ============
+
+// ============ KISS COUNTER ============
+let kissCount = parseInt(localStorage.getItem('kissCount') || '0');
+document.getElementById('kissCount').textContent = kissCount;
+function addKiss() {
+kissCount++;
+localStorage.setItem('kissCount', kissCount);
+document.getElementById('kissCount').textContent = kissCount;
+showToast('💋 Beijo guardado com carinho!', '💋');
+}
+
+// ============ GALLERY ============
 const photos = [
 { src: 'photos/foto1.jpg', alt: 'Nossa foto 1' },
 { src: 'photos/foto2.jpg', alt: 'Nossa foto 2' },
@@ -1793,6 +2235,7 @@ grid.appendChild(item);
 });
 }
 loadGallery();
+
 function openLightbox(src) {
 document.getElementById('lightboxImg').src = src;
 document.getElementById('lightbox').classList.add('active');
@@ -1802,7 +2245,35 @@ function closeLightbox() {
 document.getElementById('lightbox').classList.remove('active');
 document.body.style.overflow = '';
 }
-// ============ NEXT DATES (NOVA FUNCIONALIDADE #4) ============
+
+// ============ CARROSSEL ============
+let carouselIndex = 0;
+function openCarousel() {
+document.getElementById('carouselModal').classList.add('active');
+carouselIndex = 0;
+updateCarousel();
+}
+function closeCarousel() {
+document.getElementById('carouselModal').classList.remove('active');
+}
+function updateCarousel() {
+document.getElementById('carouselImg').src = photos[carouselIndex].src;
+}
+function carouselNext() {
+carouselIndex = (carouselIndex + 1) % photos.length;
+updateCarousel();
+}
+function carouselPrev() {
+carouselIndex = (carouselIndex - 1 + photos.length) % photos.length;
+updateCarousel();
+}
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape') closeCarousel();
+if (e.key === 'ArrowRight' && document.getElementById('carouselModal').classList.contains('active')) carouselNext();
+if (e.key === 'ArrowLeft' && document.getElementById('carouselModal').classList.contains('active')) carouselPrev();
+});
+
+// ============ NEXT DATES ============
 function getNextAnniversary(startDate, now) {
 let year = now.getFullYear();
 let anniv = new Date(year, startDate.getMonth(), startDate.getDate());
@@ -1826,19 +2297,15 @@ const now = new Date();
 const proposalDate = new Date('2026-06-12');
 const grid = document.getElementById('datesGrid');
 grid.innerHTML = '';
-// Aniversário de namoro (mensal)
 const nextMonthly = getNextMonthlyAnniversary(startDate, now);
 const diffMonthly = nextMonthly - now;
 const daysMonthly = Math.ceil(diffMonthly / (1000*60*60*24));
-// Aniversário de 1 ano
 const firstYear = new Date('2027-04-04');
 const diffYear = firstYear - now;
 const daysYear = Math.ceil(diffYear / (1000*60*60*24));
-// Aniversário do pedido
 const nextProposal = getNextAnniversary(proposalDate, now);
 const diffProposal = nextProposal - now;
 const daysProposal = Math.ceil(diffProposal / (1000*60*60*24));
-// Natal juntos
 const christmas = new Date(now.getFullYear(), 11, 25);
 let nextChristmas = christmas < now ? new Date(now.getFullYear()+1, 11, 25) : christmas;
 const diffChristmas = nextChristmas - now;
@@ -1851,14 +2318,15 @@ const dates = [
 ];
 dates.forEach(d => {
 const card = document.createElement('div');
-card.className = 'date-card';
+card.className = 'date-card glow-card';
 card.innerHTML = `<div class="date-icon">${d.icon}</div><div class="date-name">${d.name}</div><div class="date-countdown">${d.days}</div><div class="date-unit">dias</div>`;
 grid.appendChild(card);
 });
 }
 updateNextDates();
 setInterval(updateNextDates, 60000);
-// ============ QUIZ DO CASAL (NOVA FUNCIONALIDADE #6) ============
+
+// ============ QUIZ ============
 const quizQuestions = [
 { q: 'Em que dia começamos a namorar?', options: ['04 de Abril', '12 de Junho', '14 de Fevereiro', '31 de Dezembro'], correct: 0 },
 { q: 'Qual foi o dia do pedido?', options: ['04 de Abril', '12 de Junho', '25 de Dezembro', '01 de Janeiro'], correct: 1 },
@@ -1920,7 +2388,8 @@ document.getElementById('quizScore').textContent = 'Acertos: 0 / 0';
 loadQuestion();
 }
 loadQuestion();
-// ============ ACHIEVEMENTS (NOVA FUNCIONALIDADE #8) ============
+
+// ============ ACHIEVEMENTS ============
 const achievements = [
 { icon: '💫', name: 'Primeiro Encontro', date: '04/04/2026', unlocked: true },
 { icon: '🦋', name: 'Primeiro Beijo', date: '06/04/2026', unlocked: true },
@@ -1945,7 +2414,8 @@ grid.appendChild(card);
 });
 }
 loadAchievements();
-// ============ ABRIR QUANDO (NOVA FUNCIONALIDADE #7) ============
+
+// ============ ABRIR QUANDO ============
 const openWhenLetters = {
 sad: { emoji: '😢', title: 'Quando estiver triste', text: 'Ei, meu amor... 💖<br><br>Sei que hoje está difícil, mas quero que você lembre de uma coisa: <em>você nunca está sozinha</em>. Eu estou aqui, sempre.<br><br>Respira fundo. Pensa em nós. Pensa em tudo que já superamos juntos.<br><br>Você é forte, incrível e muito amada. Essa tristeza vai passar, e eu vou estar ao seu lado em cada segundo. 🌹<br><br><em>Te amo mais que tudo.</em>' },
 miss: { emoji: '💭', title: 'Quando sentir saudades', text: 'Saudade... essa palavra que dói mas também aquece. 💕<br><br>Quando sentir minha falta, fecha os olhos e lembra do nosso último abraço. Do meu cheiro. Do meu sorriso.<br><br>Estou sempre pertinho de você, mesmo quando não posso estar fisicamente. Meu coração bate no mesmo ritmo que o seu. 🦋<br><br>Logo, logo a gente se vê. E aí vai ser <em>o melhor abraço do mundo</em>. 🌹' },
@@ -1961,7 +2431,77 @@ document.getElementById('modalBody').innerHTML = `<div class="modal-emoji">${let
 document.getElementById('modalOverlay').classList.add('active');
 document.body.style.overflow = 'hidden';
 }
-// ============ RANDOM MESSAGE (NOVA FUNCIONALIDADE #9) ============
+
+// ============ JOGO DA MEMÓRIA ============
+const memoryEmojis = ['💖', '💕', '✨', '💗', '🌹', '💫', '💝', '🌙'];
+let memoryCards = [];
+let memoryFlipped = [];
+let memoryMatched = [];
+let memoryMoves = 0;
+
+function initMemoryGame() {
+const grid = document.getElementById('memoryGameGrid');
+const doubled = [...memoryEmojis, ...memoryEmojis];
+memoryCards = doubled.sort(() => Math.random() - 0.5);
+memoryFlipped = [];
+memoryMatched = [];
+memoryMoves = 0;
+document.getElementById('memoryMoves').textContent = '0';
+grid.innerHTML = '';
+memoryCards.forEach((emoji, idx) => {
+const card = document.createElement('div');
+card.className = 'memory-card';
+card.dataset.index = idx;
+card.dataset.emoji = emoji;
+card.textContent = '';
+card.onclick = () => flipMemoryCard(card);
+grid.appendChild(card);
+});
+}
+
+function flipMemoryCard(card) {
+const idx = parseInt(card.dataset.index);
+if (memoryFlipped.includes(idx) || memoryMatched.includes(idx)) return;
+if (memoryFlipped.length === 2) return;
+card.textContent = card.dataset.emoji;
+card.classList.add('flipped');
+memoryFlipped.push(idx);
+if (memoryFlipped.length === 2) {
+memoryMoves++;
+document.getElementById('memoryMoves').textContent = memoryMoves;
+const [i1, i2] = memoryFlipped;
+const emoji1 = memoryCards[i1];
+const emoji2 = memoryCards[i2];
+if (emoji1 === emoji2) {
+memoryMatched.push(i1, i2);
+memoryFlipped = [];
+document.querySelectorAll('.memory-card').forEach(c => {
+if (parseInt(c.dataset.index) === i1 || parseInt(c.dataset.index) === i2) {
+c.classList.add('matched');
+}
+});
+if (memoryMatched.length === memoryCards.length) {
+setTimeout(() => {
+showToast('🎉 Você completou o jogo! ❤️', '🧩');
+}, 500);
+}
+} else {
+setTimeout(() => {
+document.querySelectorAll('.memory-card').forEach(c => {
+const i = parseInt(c.dataset.index);
+if (i === i1 || i === i2) {
+c.textContent = '';
+c.classList.remove('flipped');
+}
+});
+memoryFlipped = [];
+}, 800);
+}
+}
+}
+initMemoryGame();
+
+// ============ RANDOM MESSAGE ============
 const messages = [
 'Você é o meu lugar favorito no mundo. 💖',
 'Cada dia ao seu lado é um presente. 🎁',
@@ -1987,8 +2527,8 @@ textEl.textContent = messages[Math.floor(Math.random() * messages.length)];
 textEl.style.opacity = '1';
 }, 400);
 }
+
 // ============ MUSIC ============
-const bgMusic = document.getElementById('bgMusic');
 const musicBtn = document.getElementById('musicBtn');
 const musicIcon = document.getElementById('musicIcon');
 const nowPlaying = document.getElementById('nowPlaying');
@@ -2002,17 +2542,22 @@ if (isPlaying) {
 bgMusic.pause();
 musicIcon.textContent = '▶';
 if(nowPlaying) nowPlaying.style.opacity = '0';
+document.getElementById('vinyl').classList.remove('spinning');
 } else {
 const p = bgMusic.play();
 if (p !== undefined) {
 p.then(() => {
 musicIcon.textContent = '⏸';
 if(nowPlaying) nowPlaying.style.opacity = '1';
+document.getElementById('vinyl').classList.add('spinning');
 }).catch(err => console.log('Clique novamente para ativar o áudio'));
 }
 }
 isPlaying = !isPlaying;
 }
+// Touch do vinil
+document.getElementById('vinyl').addEventListener('click', toggleMusic);
+
 // ============ SCROLL ============
 const observer = new IntersectionObserver((entries) => {
 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
@@ -2033,6 +2578,7 @@ a.classList.remove('active');
 if (a.getAttribute('href') === '#' + current) a.classList.add('active');
 });
 });
+
 // ============ MODALS ============
 const modalData = {
 reasons: { emoji: '💌', title: 'Por Que Te Amo', text: '<p style="line-height:1.9">💖 <em>Seu sorriso</em> - ilumina tudo<br>🌙 <em>Seu abraço</em> - meu lugar seguro<br>✨ <em>Seu olhar</em> - me faz esquecer o mundo<br>🎵 <em>Sua risada</em> - a melhor melodia<br>🌹 <em>Seu carinho</em> - me faz especial<br>💫 <em>Seu jeito</em> - único e perfeito<br>❤️ <em>Você inteira</em> - é tudo pra mim</p>' },
@@ -2051,17 +2597,17 @@ text: '<div class="playlist-container" id="playlistContainer">' +
 '<div class="music-progress"></div>' +
 '</div>' +
 '<div class="playlist-item" data-music="music/eu-e-minha-casa.mp3" data-fallback="music/eu-e-minha-casa.mp3">' +
-'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">️</span><span class="music-name">eu e minha casa - Julliany Souza</span></div>' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">eu e minha casa - Julliany Souza</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
 '<div class="music-progress"></div>' +
 '</div>' +
 '<div class="playlist-item" data-music="music/thousand-years.mp3" data-fallback="music/nossa-musica.mp3">' +
-'<div class="music-info"><div class="music-loading"></div><span class="music-icon"></span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">A Thousand Years - Christina Perri</span></div>' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">A Thousand Years - Christina Perri</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
 '<div class="music-progress"></div>' +
 '</div>' +
 '<div class="playlist-item" data-music="music/thinking-out-loud.mp3" data-fallback="music/nossa-musica.mp3">' +
-'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">️</span><span class="music-name">Thinking Out Loud - Ed Sheeran</span></div>' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Thinking Out Loud - Ed Sheeran</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
 '<div class="music-progress"></div>' +
 '</div>' +
@@ -2071,7 +2617,7 @@ text: '<div class="playlist-container" id="playlistContainer">' +
 '<div class="music-progress"></div>' +
 '</div>' +
 '<div class="playlist-item" data-music="music/make-you-feel.mp3" data-fallback="music/nossa-musica.mp3">' +
-'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">️</span><span class="music-name">Make You Feel My Love - Adele</span></div>' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Make You Feel My Love - Adele</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
 '<div class="music-progress"></div>' +
 '</div>' +
@@ -2093,6 +2639,7 @@ if (event && event.target !== event.currentTarget && !event.target.classList.con
 document.getElementById('modalOverlay').classList.remove('active');
 document.body.style.overflow = '';
 }
+
 // ============ SMOOTH SCROLL ============
 document.querySelectorAll('.nav a').forEach(a => {
 a.addEventListener('click', (e) => {
@@ -2102,14 +2649,15 @@ if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 });
 document.addEventListener('keydown', (e) => {
-if (e.key === 'Escape') { closeModal(); closeLightbox(); }
+if (e.key === 'Escape') { closeModal(); closeLightbox(); closeCarousel(); }
 if (e.key === 'm' || e.key === 'M') toggleMusic();
 });
-// ============ PLAYLIST MUSIC PLAYER (MELHORADO) ============
+
+// ============ PLAYLIST MUSIC PLAYER ============
 let currentPlaylistMusic = null;
 let isPlaylistPlaying = false;
 let progressInterval = null;
-// Criar toast notification
+
 function showToast(message, icon = '🎵') {
 let toast = document.getElementById('audioToast');
 if (!toast) {
@@ -2122,6 +2670,7 @@ toast.innerHTML = `<span class="audio-toast-icon">${icon}</span><span>${message}
 toast.classList.add('show');
 setTimeout(() => toast.classList.remove('show'), 2500);
 }
+
 function togglePlaylistMusic(btn) {
 const playlistItem = btn.closest('.playlist-item');
 let musicSrc = playlistItem.getAttribute('data-music');
@@ -2129,7 +2678,7 @@ const fallbackSrc = playlistItem.getAttribute('data-fallback');
 const audio = document.getElementById('playlistAudio');
 const allItems = document.querySelectorAll('.playlist-item');
 const allBtns = document.querySelectorAll('.music-play-btn');
-// Se clicar na mesma música que está tocando
+
 if (currentPlaylistMusic === playlistItem && isPlaylistPlaying) {
 audio.pause();
 btn.textContent = '▶';
@@ -2141,7 +2690,7 @@ currentPlaylistMusic = null;
 clearInterval(progressInterval);
 return;
 }
-// Para todas as outras músicas
+
 allItems.forEach(item => {
 item.classList.remove('playing');
 item.classList.remove('loading');
@@ -2152,16 +2701,14 @@ b.textContent = '▶';
 b.classList.remove('playing');
 });
 clearInterval(progressInterval);
-// Mostra loading
+
 playlistItem.classList.add('loading');
 btn.textContent = '';
-// Tenta tocar a música
 audio.src = musicSrc;
 audio.volume = 0.4;
 const playPromise = audio.play();
 if (playPromise !== undefined) {
 playPromise.then(() => {
-// Sucesso!
 playlistItem.classList.remove('loading');
 playlistItem.classList.add('playing');
 btn.textContent = '';
@@ -2170,7 +2717,6 @@ currentPlaylistMusic = playlistItem;
 isPlaylistPlaying = true;
 startProgress(btn, playlistItem);
 }).catch(err => {
-// Erro - tenta o fallback
 console.log('Erro ao tocar:', musicSrc, err);
 playlistItem.classList.remove('loading');
 if (fallbackSrc && musicSrc !== fallbackSrc) {
@@ -2179,7 +2725,7 @@ musicSrc = fallbackSrc;
 audio.src = musicSrc;
 audio.play().then(() => {
 playlistItem.classList.add('playing');
-btn.textContent = '⏸';
+btn.textContent = '';
 btn.classList.add('playing');
 currentPlaylistMusic = playlistItem;
 isPlaylistPlaying = true;
@@ -2195,8 +2741,8 @@ showMusicError(playlistItem, btn);
 }
 function showMusicError(playlistItem, btn) {
 playlistItem.classList.add('error');
-btn.textContent = '️';
-showToast('Música não disponível 😢', '️');
+btn.textContent = '⚠️';
+showToast('Música não disponível 😢', '⚠️');
 }
 function startProgress(btn, playlistItem) {
 const audio = document.getElementById('playlistAudio');
@@ -2209,7 +2755,6 @@ progressBar.style.width = progress + '%';
 }
 }, 200);
 }
-// Quando a música terminar
 document.addEventListener('DOMContentLoaded', () => {
 const audio = document.getElementById('playlistAudio');
 if (audio) {
@@ -2239,7 +2784,8 @@ item.classList.add('error');
 });
 }
 });
-// ============ PREMIUM: TEMA CLARO/ESCURO ============
+
+// ============ THEME ============
 function toggleTheme() {
 document.body.classList.toggle('light-theme');
 const btn = document.getElementById('themeToggle');
@@ -2251,7 +2797,6 @@ btn.textContent = '🌙';
 localStorage.setItem('ivy-theme', 'dark');
 }
 }
-// Carregar tema salvo ao abrir o site
 (function() {
 const savedTheme = localStorage.getItem('ivy-theme');
 if (savedTheme === 'light') {
@@ -2260,17 +2805,6 @@ const btn = document.getElementById('themeToggle');
 if (btn) btn.textContent = '☀️';
 }
 })();
-// ============ PREMIUM: VINIL SYNC ============
-const vinyl = document.getElementById('vinyl');
-const originalToggle = toggleMusic;
-toggleMusic = function() {
-originalToggle();
-if (isPlaying) {
-vinyl.classList.add('spinning');
-} else {
-vinyl.classList.remove('spinning');
-}
-};
 </script>
 </body>
 </html>
