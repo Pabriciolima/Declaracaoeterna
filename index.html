@@ -30,6 +30,16 @@
   --bg-secondary: #1a1a2e;
   --card-bg: rgba(255,255,255,0.06);
   --card-border: rgba(255,255,255,0.12);
+  /* Cores Spotify */
+  --spotify-green: #1DB954;
+  --spotify-green-dark: #1aa34a;
+  --spotify-green-light: #2ecc71;
+  --spotify-bg: #121212;
+  --spotify-card: #181818;
+  --spotify-card-hover: #282828;
+  --spotify-text: #ffffff;
+  --spotify-text-secondary: #b3b3b3;
+  --spotify-border: rgba(255,255,255,0.06);
 }
 
 /* ===== TEMA CLARO (LIGHT THEME) ===== */
@@ -44,6 +54,12 @@ body.light-theme {
   --card-border: rgba(194,24,91,0.15);
   --darker: #f5f0ed;
   --dark: #fff9f6;
+  --spotify-bg: #f5f0ed;
+  --spotify-card: #ffffff;
+  --spotify-card-hover: #f0ebe6;
+  --spotify-text: #1a1a2e;
+  --spotify-text-secondary: rgba(26,26,46,0.6);
+  --spotify-border: rgba(26,26,46,0.08);
 }
 
 body.light-theme .parallax-overlay { opacity: 0.2; }
@@ -1035,112 +1051,301 @@ section {
 }
 .sparkle-divider .dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
 
-/* ===== PLAYLIST ===== */
+/* ============================================================
+   PLAYLIST PREMIUM - ESTILO SPOTIFY 
+   ============================================================ */
 .playlist-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   max-height: 450px;
   overflow-y: auto;
-  padding-right: 5px;
+  padding: 6px 4px 6px 6px;
 }
-.playlist-container::-webkit-scrollbar { width: 6px; }
-.playlist-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
-.playlist-container::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 10px; }
+.playlist-container::-webkit-scrollbar { width: 4px; }
+.playlist-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+.playlist-container::-webkit-scrollbar-thumb { background: var(--spotify-green); border-radius: 10px; }
+
 .playlist-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--card-border);
-  border-radius: 14px;
-  padding: 12px 14px;
-  transition: all 0.3s ease;
+  gap: 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(29,185,84,0.06);
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
   cursor: pointer;
   position: relative;
   overflow: hidden;
 }
-.playlist-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(232,160,191,0.4); transform: translateX(4px); }
+.playlist-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, rgba(29,185,84,0.06), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.playlist-item:hover {
+  background: rgba(29,185,84,0.05);
+  border-color: rgba(29,185,84,0.2);
+  transform: translateX(4px);
+}
+.playlist-item:hover::before { opacity: 1; }
 .playlist-item.playing {
-  background: linear-gradient(135deg, rgba(194,24,91,0.25), rgba(212,165,116,0.1));
-  border-color: var(--rose);
-  box-shadow: 0 4px 20px rgba(194,24,91,0.3);
+  background: rgba(29,185,84,0.12);
+  border-color: var(--spotify-green);
+  box-shadow: 0 0 30px rgba(29,185,84,0.08);
 }
-.playlist-item.loading { opacity: 0.6; }
-.playlist-item.error { border-color: rgba(244,67,54,0.5); }
-.music-info { display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden; position: relative; z-index: 1; }
-.music-icon { font-size: 20px; flex-shrink: 0; transition: all 0.3s; }
-.playlist-item.playing .music-icon { display: none; }
-.music-equalizer { display: none; align-items: flex-end; gap: 2px; height: 18px; flex-shrink: 0; }
-.playlist-item.playing .music-equalizer { display: flex; }
-.eq-bar {
-  width: 3px;
-  background: linear-gradient(180deg, var(--rose), var(--gold));
-  border-radius: 2px;
-  animation: eqBounce 0.8s ease-in-out infinite;
+.playlist-item.playing::before { opacity: 0.5; }
+.playlist-item.loading { opacity: 0.5; }
+.playlist-item.error { border-color: rgba(244,67,54,0.3); }
+
+/* Cover Art */
+.playlist-cover {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #1a1a2e, #0a0a12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border: 1px solid rgba(29,185,84,0.08);
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
 }
-.eq-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
-.eq-bar:nth-child(2) { height: 12px; animation-delay: 0.15s; }
-.eq-bar:nth-child(3) { height: 8px; animation-delay: 0.3s; }
-.eq-bar:nth-child(4) { height: 14px; animation-delay: 0.45s; }
-@keyframes eqBounce {
-  0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
-  50% { transform: scaleY(1); opacity: 1; }
+.playlist-item.playing .playlist-cover {
+  border-color: var(--spotify-green);
 }
-.music-loading {
+.playlist-cover .cover-icon {
+  font-size: 18px;
+  opacity: 0.6;
+}
+.playlist-item.playing .playlist-cover .cover-icon {
+  opacity: 1;
+  animation: coverPulse 1.5s ease-in-out infinite;
+}
+@keyframes coverPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Music Info */
+.playlist-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.playlist-info .track-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s;
+}
+.playlist-item.playing .track-name {
+  color: var(--spotify-green);
+}
+.playlist-info .track-artist {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.playlist-item.playing .track-artist {
+  color: var(--text-secondary);
+}
+
+/* Duration */
+.playlist-duration {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-right: 6px;
+  font-weight: 300;
+  min-width: 32px;
+  text-align: right;
+}
+
+/* Like */
+.playlist-like {
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  opacity: 0.3;
+}
+.playlist-like:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+.playlist-like.liked {
+  color: var(--spotify-green);
+  opacity: 1;
+}
+
+/* Equalizer */
+.playlist-equalizer {
   display: none;
-  width: 18px; height: 18px;
-  border: 2px solid rgba(255,255,255,0.2);
-  border-top-color: var(--rose);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  align-items: flex-end;
+  gap: 2px;
+  height: 20px;
   flex-shrink: 0;
 }
-.playlist-item.loading .music-loading { display: block; }
-.playlist-item.loading .music-icon,
-.playlist-item.loading .music-equalizer { display: none; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.music-error { display: none; font-size: 16px; flex-shrink: 0; }
-.playlist-item.error .music-error { display: block; }
-.playlist-item.error .music-icon,
-.playlist-item.error .music-equalizer { display: none; }
-.music-name { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; transition: color 0.3s; }
-.playlist-item.playing .music-name { color: var(--rose); font-weight: 600; }
-.music-play-btn {
-  width: 38px; height: 38px;
+.playlist-item.playing .playlist-equalizer {
+  display: flex;
+}
+.eq-green-bar {
+  width: 3px;
+  background: linear-gradient(180deg, var(--spotify-green), var(--spotify-green-light));
+  border-radius: 2px;
+  animation: eqGreenBounce 0.7s ease-in-out infinite;
+}
+.eq-green-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+.eq-green-bar:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+.eq-green-bar:nth-child(3) { height: 10px; animation-delay: 0.2s; }
+.eq-green-bar:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+@keyframes eqGreenBounce {
+  0%,100% { transform: scaleY(0.3); opacity: 0.5; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+/* Play Button */
+.playlist-play-btn {
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--rose-deep), var(--rose));
+  background: linear-gradient(135deg, var(--spotify-green), var(--spotify-green-dark));
   border: none;
-  color: white;
+  color: #000;
   font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  box-shadow: 0 2px 10px rgba(194,24,91,0.3);
-  position: relative;
-  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: 0 2px 12px rgba(29,185,84,0.2);
 }
-.music-play-btn:hover { transform: scale(1.1); box-shadow: 0 4px 20px rgba(194,24,91,0.6); }
-.music-play-btn:active { transform: scale(0.95); }
-.music-play-btn.playing {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  animation: btnPulse 1.5s ease-in-out infinite;
+.playlist-play-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 4px 20px rgba(29,185,84,0.4);
 }
-@keyframes btnPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(212,165,116,0.5); }
-  50% { box-shadow: 0 0 0 8px rgba(212,165,116,0); }
+.playlist-play-btn:active { transform: scale(0.9); }
+.playlist-play-btn.playing {
+  background: linear-gradient(135deg, var(--spotify-green), var(--spotify-green-dark));
+  animation: btnGreenPulse 1.5s ease-in-out infinite;
 }
-.music-progress {
+@keyframes btnGreenPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(29,185,84,0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(29,185,84,0); }
+}
+
+/* Progress Bar */
+.playlist-progress {
   position: absolute;
-  bottom: 0; left: 0;
+  bottom: 0;
+  left: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--rose), var(--gold));
+  background: linear-gradient(90deg, var(--spotify-green), var(--spotify-green-light));
   width: 0%;
   transition: width 0.3s linear;
   z-index: 2;
+}
+.playlist-item.playing .playlist-progress {
+  animation: progressGreenGlow 2s ease-in-out infinite;
+}
+@keyframes progressGreenGlow {
+  0%,100% { box-shadow: 0 0 4px rgba(29,185,84,0.3); }
+  50% { box-shadow: 0 0 12px rgba(29,185,84,0.6); }
+}
+
+/* Loading/Error States */
+.playlist-loading {
+  display: none;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(29,185,84,0.15);
+  border-top-color: var(--spotify-green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+.playlist-item.loading .playlist-loading { display: block; }
+.playlist-item.loading .playlist-play-btn { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.playlist-error {
+  display: none;
+  font-size: 14px;
+  color: #f44336;
+  flex-shrink: 0;
+}
+.playlist-item.error .playlist-error { display: block; }
+.playlist-item.error .playlist-play-btn { display: none; }
+
+/* Playlist Header */
+.playlist-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  background: rgba(29,185,84,0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(29,185,84,0.08);
+}
+.playlist-header .header-icon {
+  font-size: 28px;
+}
+.playlist-header .header-info {
+  flex: 1;
+  text-align: left;
+}
+.playlist-header .header-info .title {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.playlist-header .header-info .sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* Now Playing Badge */
+.now-playing-badge {
+  display: inline-block;
+  background: var(--spotify-green);
+  color: #000;
+  font-size: 8px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  animation: badgePulse 1.5s ease-in-out infinite;
+  margin-left: 6px;
+}
+@keyframes badgePulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 /* ===== TOAST ===== */
@@ -1485,7 +1690,6 @@ body.focus-mode section.focus-section { opacity: 1; }
 .memory-card.matched { opacity: 0.4; pointer-events: none; }
 
 /* ===== NOVAS FUNCIONALIDADES ===== */
-/* 1. MURAL DE RECADOS */
 .message-board {
   max-width: 550px;
   width: 100%;
@@ -1542,7 +1746,6 @@ body.focus-mode section.focus-section { opacity: 1; }
   border-left: 2px solid var(--rose);
 }
 
-/* 2. JOGO DA VELHA */
 .tic-tac-toe {
   max-width: 350px;
   width: 100%;
@@ -1587,7 +1790,6 @@ body.focus-mode section.focus-section { opacity: 1; }
 }
 .tic-tac-toe .reset-btn:hover { background: rgba(255,255,255,0.08); }
 
-/* 3. ORÁCULO DO AMOR */
 .oracle-result {
   font-family: 'Great Vibes', cursive;
   font-size: 22px;
@@ -1602,7 +1804,6 @@ body.focus-mode section.focus-section { opacity: 1; }
   border: 1px dashed var(--card-border);
 }
 
-/* 4. METEOROLOGIA DO AMOR */
 .love-weather {
   display: flex;
   align-items: center;
@@ -1618,7 +1819,6 @@ body.focus-mode section.focus-section { opacity: 1; }
 .love-weather .temp { font-size: 20px; font-weight: 600; color: var(--rose); }
 .love-weather .desc { font-size: 12px; color: var(--text-muted); }
 
-/* 5. BARRA DE PROGRESSO DO RELACIONAMENTO */
 .relationship-bar {
   width: 100%;
   max-width: 500px;
@@ -1649,7 +1849,6 @@ body.focus-mode section.focus-section { opacity: 1; }
   width: 0%;
 }
 
-/* CURSOR GLOW */
 #cursorGlow {
   position: fixed;
   width: 300px;
@@ -2558,16 +2757,122 @@ const modalData = {
   reasons: { emoji: '💌', title: 'Por Que Te Amo', text: '<p style="line-height:1.9">💖 <em>Seu sorriso</em> - ilumina tudo<br>🌙 <em>Seu abraço</em> - meu lugar seguro<br>✨ <em>Seu olhar</em> - me faz esquecer o mundo<br>🎵 <em>Sua risada</em> - a melhor melodia<br>🌹 <em>Seu carinho</em> - me faz especial<br>💫 <em>Seu jeito</em> - único e perfeito<br>❤️ <em>Você inteira</em> - é tudo pra mim</p>' },
   playlist: {
     emoji: '🎵',
-    title: 'Nossa Playlist',
-    text: '<div class="playlist-container" id="playlistContainer">' +
-      '<div class="playlist-item" data-music="music/perfect.mp3" data-fallback="music/perfect.mp3"><div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Perfect - Ed Sheeran</span></div><button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button><div class="music-progress"></div></div>' +
-      '<div class="playlist-item" data-music="music/all-of-me.mp3" data-fallback="music/all-of-me.mp3"><div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">All of Me - John Legend</span></div><button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button><div class="music-progress"></div></div>' +
-      '<div class="playlist-item" data-music="music/eu-e-minha-casa.mp3" data-fallback="music/eu-e-minha-casa.mp3"><div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Eu e Minha Casa - Julliany Souza</span></div><button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button><div class="music-progress"></div></div>' +
-      '<div class="playlist-item" data-music="music/thousand-years.mp3" data-fallback="music/thousand-years.mp3"><div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">A Thousand Years - Christina Perri</span></div><button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button><div class="music-progress"></div></div>' +
-      '<div class="playlist-item" data-music="music/thinking-out-loud.mp3" data-fallback="music/thinking-out-loud.mp3"><div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Thinking Out Loud - Ed Sheeran</span></div><button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button><div class="music-progress"></div></div>' +
-      '<div class="playlist-item" data-music="music/cant-help.mp3" data-fallback="music/cant-help.mp3"><div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Can\'t Help Falling in Love - Elvis</span></div><button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button><div class="music-progress"></div></div>' +
-      '<div class="playlist-item" data-music="music/make-you-feel.mp3" data-fallback="music/make-you-feel.mp3"><div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Make You Feel My Love - Adele</span></div><button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button><div class="music-progress"></div></div>' +
-      '</div><div class="sparkle-divider"><span></span><div class="dot"></div><span></span></div><p style="font-size:12px;margin-top:15px">Cada música me lembra você 💕</p><audio id="playlistAudio" preload="auto"></audio>'
+    title: 'Nossa Playlist • Spotify Premium',
+    text: `
+      <div style="margin-bottom:14px;text-align:left;">
+        <div style="display:flex;align-items:center;gap:12px;background:rgba(29,185,84,0.06);border-radius:12px;padding:12px 16px;border:1px solid rgba(29,185,84,0.1);">
+          <span style="font-size:28px;">🎵</span>
+          <div style="flex:1;">
+            <div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:var(--text-primary);">♫ Nossa Playlist do Amor</div>
+            <div style="font-family:Inter,sans-serif;font-size:10px;color:var(--text-muted);font-weight:300;">7 músicas • Feita com ❤️</div>
+          </div>
+          <span style="font-size:22px;color:#1DB954;">♫</span>
+        </div>
+      </div>
+      <div class="playlist-container">
+        <div class="playlist-item" data-music="music/perfect.mp3" data-fallback="music/perfect.mp3">
+          <div class="playlist-cover"><span class="cover-icon">🎵</span></div>
+          <div class="playlist-info">
+            <div class="track-name">Perfect</div>
+            <div class="track-artist">Ed Sheeran</div>
+          </div>
+          <span class="playlist-duration">4:23</span>
+          <span class="playlist-like" onclick="toggleLike(this)">♡</span>
+          <div class="playlist-equalizer"><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div></div>
+          <div class="playlist-loading"></div>
+          <div class="playlist-error">⚠️</div>
+          <button class="playlist-play-btn" onclick="togglePlaylistMusic(this)">▶</button>
+          <div class="playlist-progress"></div>
+        </div>
+        <div class="playlist-item" data-music="music/all-of-me.mp3" data-fallback="music/all-of-me.mp3">
+          <div class="playlist-cover"><span class="cover-icon">🎵</span></div>
+          <div class="playlist-info">
+            <div class="track-name">All of Me</div>
+            <div class="track-artist">John Legend</div>
+          </div>
+          <span class="playlist-duration">4:11</span>
+          <span class="playlist-like" onclick="toggleLike(this)">♡</span>
+          <div class="playlist-equalizer"><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div></div>
+          <div class="playlist-loading"></div>
+          <div class="playlist-error">⚠️</div>
+          <button class="playlist-play-btn" onclick="togglePlaylistMusic(this)">▶</button>
+          <div class="playlist-progress"></div>
+        </div>
+        <div class="playlist-item" data-music="music/eu-e-minha-casa.mp3" data-fallback="music/eu-e-minha-casa.mp3">
+          <div class="playlist-cover"><span class="cover-icon">🎵</span></div>
+          <div class="playlist-info">
+            <div class="track-name">Eu e Minha Casa</div>
+            <div class="track-artist">Julliany Souza</div>
+          </div>
+          <span class="playlist-duration">3:45</span>
+          <span class="playlist-like" onclick="toggleLike(this)">♡</span>
+          <div class="playlist-equalizer"><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div></div>
+          <div class="playlist-loading"></div>
+          <div class="playlist-error">⚠️</div>
+          <button class="playlist-play-btn" onclick="togglePlaylistMusic(this)">▶</button>
+          <div class="playlist-progress"></div>
+        </div>
+        <div class="playlist-item" data-music="music/thousand-years.mp3" data-fallback="music/thousand-years.mp3">
+          <div class="playlist-cover"><span class="cover-icon">🎵</span></div>
+          <div class="playlist-info">
+            <div class="track-name">A Thousand Years</div>
+            <div class="track-artist">Christina Perri</div>
+          </div>
+          <span class="playlist-duration">4:45</span>
+          <span class="playlist-like" onclick="toggleLike(this)">♡</span>
+          <div class="playlist-equalizer"><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div></div>
+          <div class="playlist-loading"></div>
+          <div class="playlist-error">⚠️</div>
+          <button class="playlist-play-btn" onclick="togglePlaylistMusic(this)">▶</button>
+          <div class="playlist-progress"></div>
+        </div>
+        <div class="playlist-item" data-music="music/thinking-out-loud.mp3" data-fallback="music/thinking-out-loud.mp3">
+          <div class="playlist-cover"><span class="cover-icon">🎵</span></div>
+          <div class="playlist-info">
+            <div class="track-name">Thinking Out Loud</div>
+            <div class="track-artist">Ed Sheeran</div>
+          </div>
+          <span class="playlist-duration">4:41</span>
+          <span class="playlist-like" onclick="toggleLike(this)">♡</span>
+          <div class="playlist-equalizer"><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div></div>
+          <div class="playlist-loading"></div>
+          <div class="playlist-error">⚠️</div>
+          <button class="playlist-play-btn" onclick="togglePlaylistMusic(this)">▶</button>
+          <div class="playlist-progress"></div>
+        </div>
+        <div class="playlist-item" data-music="music/cant-help.mp3" data-fallback="music/cant-help.mp3">
+          <div class="playlist-cover"><span class="cover-icon">🎵</span></div>
+          <div class="playlist-info">
+            <div class="track-name">Can't Help Falling in Love</div>
+            <div class="track-artist">Elvis Presley</div>
+          </div>
+          <span class="playlist-duration">3:01</span>
+          <span class="playlist-like" onclick="toggleLike(this)">♡</span>
+          <div class="playlist-equalizer"><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div></div>
+          <div class="playlist-loading"></div>
+          <div class="playlist-error">⚠️</div>
+          <button class="playlist-play-btn" onclick="togglePlaylistMusic(this)">▶</button>
+          <div class="playlist-progress"></div>
+        </div>
+        <div class="playlist-item" data-music="music/make-you-feel.mp3" data-fallback="music/make-you-feel.mp3">
+          <div class="playlist-cover"><span class="cover-icon">🎵</span></div>
+          <div class="playlist-info">
+            <div class="track-name">Make You Feel My Love</div>
+            <div class="track-artist">Adele</div>
+          </div>
+          <span class="playlist-duration">3:32</span>
+          <span class="playlist-like" onclick="toggleLike(this)">♡</span>
+          <div class="playlist-equalizer"><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div><div class="eq-green-bar"></div></div>
+          <div class="playlist-loading"></div>
+          <div class="playlist-error">⚠️</div>
+          <button class="playlist-play-btn" onclick="togglePlaylistMusic(this)">▶</button>
+          <div class="playlist-progress"></div>
+        </div>
+      </div>
+      <div class="sparkle-divider"><span></span><div class="dot"></div><span></span></div>
+      <p style="font-family:Inter, sans-serif;font-size:11px;margin-top:15px;color:var(--text-muted);font-weight:300;letter-spacing:1px;">♫ Cada música me lembra você 💕</p>
+      <audio id="playlistAudio" preload="auto"></audio>
+    `
   },
   promise: { emoji: '🤞', title: 'Minhas Promessas', text: '<p style="line-height:1.9">🌹 Prometo te fazer <em>sorrir</em> todos os dias<br>🌙 Prometo ser seu <em>porto seguro</em><br>✨ Prometo <em>te ouvir</em> sempre<br>💫 Prometo <em>te apoiar</em> nos seus sonhos<br>💖 Prometo te <em>amar</em> a cada segundo<br>💍 Prometo ser <em>seu</em> para sempre</p>' },
   secret: { emoji: '🤫', title: 'Segredo Especial', text: '<p style="line-height:1.8">Sabia que desde o primeiro dia que te vi, eu já sabia que você seria <em>alguém muito especial</em> na minha vida? 💫<br><br>Cada dia que passa, eu tenho mais certeza de que você é <em>a pessoa certa</em> pra mim. ❤️<br><br>E esse site... foi feito com todo o <em>meu amor</em> especialmente pra você. Cada detalhe pensado em <em>como te fazer feliz</em>. 🌹<br><br><em>Você é o meu maior orgulho.</em> 💖</p>' }
@@ -2598,7 +2903,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'm' || e.key === 'M') toggleMusic();
 });
 
-// ============ PLAYLIST - CORRIGIDA ============
+// ============ PLAYLIST - FUNCIONALIDADE COMPLETA ============
 let currentPlaylistMusic = null, isPlaylistPlaying = false, progressInterval = null;
 
 function showToast(message, icon = '🎵') {
@@ -2617,7 +2922,6 @@ function showToast(message, icon = '🎵') {
 function togglePlaylistMusic(btn) {
   console.log('🎵 Clique detectado no player!');
   
-  // Encontra o item da playlist
   const playlistItem = btn ? btn.closest('.playlist-item') : null;
   if (!playlistItem) {
     console.error('❌ Playlist item não encontrado');
@@ -2631,16 +2935,14 @@ function togglePlaylistMusic(btn) {
     return;
   }
   
-  // Pega o caminho da música
   let musicSrc = playlistItem.getAttribute('data-music');
   const fallbackSrc = playlistItem.getAttribute('data-fallback');
   
   console.log('🎵 Tentando tocar:', musicSrc);
   
   const allItems = document.querySelectorAll('.playlist-item');
-  const allBtns = document.querySelectorAll('.music-play-btn');
+  const allBtns = document.querySelectorAll('.playlist-play-btn');
   
-  // Se já está tocando a mesma música -> pausa
   if (currentPlaylistMusic === playlistItem && isPlaylistPlaying) {
     audio.pause();
     if (btn) {
@@ -2655,7 +2957,6 @@ function togglePlaylistMusic(btn) {
     return;
   }
   
-  // Para todas as outras músicas
   allItems.forEach(item => item.classList.remove('playing', 'loading', 'error'));
   allBtns.forEach(b => { 
     b.textContent = '▶'; 
@@ -2663,14 +2964,12 @@ function togglePlaylistMusic(btn) {
   });
   clearInterval(progressInterval);
   
-  // Inicia carregamento
   playlistItem.classList.add('loading');
   if (btn) btn.textContent = '';
   
-  // Define a fonte e tenta tocar
   audio.src = musicSrc;
   audio.volume = 0.4;
-  audio.load(); // Força o carregamento
+  audio.load();
   
   console.log('🎵 Carregando:', musicSrc);
   
@@ -2689,14 +2988,13 @@ function togglePlaylistMusic(btn) {
         currentPlaylistMusic = playlistItem;
         isPlaylistPlaying = true;
         startProgress(btn, playlistItem);
-        const trackName = playlistItem.querySelector('.music-name');
+        const trackName = playlistItem.querySelector('.track-name');
         showToast(`🎵 Tocando: ${trackName ? trackName.textContent : 'Música'}`, '🎵');
       })
       .catch((err) => {
         console.error('❌ Erro ao tocar:', err);
         playlistItem.classList.remove('loading');
         
-        // Tenta o fallback
         if (fallbackSrc && musicSrc !== fallbackSrc) {
           console.log('🔄 Tentando fallback:', fallbackSrc);
           audio.src = fallbackSrc;
@@ -2713,7 +3011,7 @@ function togglePlaylistMusic(btn) {
               currentPlaylistMusic = playlistItem;
               isPlaylistPlaying = true;
               startProgress(btn, playlistItem);
-              showToast(`🎵 Tocando: ${playlistItem.querySelector('.music-name')?.textContent || 'Música'}`, '🎵');
+              showToast(`🎵 Tocando: ${playlistItem.querySelector('.track-name')?.textContent || 'Música'}`, '🎵');
             })
             .catch((fallbackErr) => {
               console.error('❌ Fallback também falhou:', fallbackErr);
@@ -2724,7 +3022,6 @@ function togglePlaylistMusic(btn) {
         }
       });
   } else {
-    // Navegador antigo - tentativa direta
     try {
       audio.play();
       playlistItem.classList.remove('loading');
@@ -2754,7 +3051,7 @@ function showMusicError(playlistItem, btn) {
 
 function startProgress(btn, playlistItem) {
   const audio = document.getElementById('playlistAudio');
-  const progressBar = playlistItem.querySelector('.music-progress');
+  const progressBar = playlistItem.querySelector('.playlist-progress');
   clearInterval(progressInterval);
   
   progressInterval = setInterval(() => {
@@ -2765,19 +3062,25 @@ function startProgress(btn, playlistItem) {
   }, 200);
 }
 
-// Evento quando a música termina
+function toggleLike(el) {
+  el.classList.toggle('liked');
+  const isLiked = el.classList.contains('liked');
+  el.textContent = isLiked ? '❤️' : '♡';
+  showToast(isLiked ? '💚 Música favoritada!' : '💔 Removida dos favoritos', isLiked ? '❤️' : '💔');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const audio = document.getElementById('playlistAudio');
   if (audio) {
     audio.addEventListener('ended', () => {
       console.log('⏹️ Música finalizada');
-      document.querySelectorAll('.music-play-btn').forEach(b => { 
+      document.querySelectorAll('.playlist-play-btn').forEach(b => { 
         b.textContent = '▶'; 
         b.classList.remove('playing'); 
       });
       document.querySelectorAll('.playlist-item').forEach(item => { 
         item.classList.remove('playing', 'loading'); 
-        const pb = item.querySelector('.music-progress'); 
+        const pb = item.querySelector('.playlist-progress'); 
         if (pb) pb.style.width = '0%'; 
       });
       isPlaylistPlaying = false;
@@ -2816,7 +3119,6 @@ document.addEventListener('mousemove', (e) => {
 
 // ============ NOVAS FUNCIONALIDADES ============
 
-// 1. MURAL DE RECADOS
 function saveMessage() {
   const input = document.getElementById('messageInput');
   const text = input.value.trim();
@@ -2836,7 +3138,6 @@ function loadMessages() {
   ).join('');
 }
 
-// 2. JOGO DA VELHA
 let ticBoard = Array(9).fill(null);
 let ticCurrent = '❤️';
 let ticWinner = null;
@@ -2886,7 +3187,6 @@ function checkTicWinner() {
 function resetTicTacToe() { initTicTacToe(); }
 initTicTacToe();
 
-// 3. ORÁCULO DO AMOR
 const oracles = [
   '💖 O amor verdadeiro sempre encontra um caminho.',
   '✨ Você é a pessoa mais importante da vida dele/dela.',
@@ -2905,7 +3205,6 @@ function getOracle() {
   showToast('🔮 O oráculo falou!', '🔮');
 }
 
-// 4. METEOROLOGIA DO AMOR
 function updateLoveWeather() {
   const icons = ['☀️', '⛅', '🌤️', '💕', '🌹', '✨'];
   const descs = ['Amor ensolarado 💖', 'Céu de paixão 🌤️', 'Amor radiante ☀️', 'Coração quente 💕', 'Flores de amor 🌹', 'Estrelas do amor ✨'];
@@ -2916,7 +3215,6 @@ function updateLoveWeather() {
 }
 setInterval(updateLoveWeather, 60000);
 
-// 5. BARRA DE PROGRESSO DO RELACIONAMENTO
 function updateRelationshipProgress() {
   const unlocked = achievements.filter(a => a.unlocked).length;
   const total = achievements.length;
@@ -2926,7 +3224,6 @@ function updateRelationshipProgress() {
 }
 updateRelationshipProgress();
 
-// ============ INICIALIZAÇÃO ============
 loadMessages();
 </script>
 <div id="cursorGlow"></div>
