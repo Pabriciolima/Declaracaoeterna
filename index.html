@@ -1,13 +1,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-
 <!-- PREVENIR CACHE - ADICIONE ISSO -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="Cache-Control" content="max-age=0" />
-
 <title>💖 Nosso Amor - Ivy</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&family=Great+Vibes&display=swap');
@@ -1006,77 +1004,140 @@ width: 5px; height: 5px;
 background: var(--gold);
 border-radius: 50%;
 }
-/* ============ PLAYLIST PLAYER ============ */
+/* ============ PLAYLIST PLAYER (MELHORADO) ============ */
 .playlist-container {
 display: flex;
 flex-direction: column;
-gap: 10px;
-max-height: 400px;
+gap: 8px;
+max-height: 450px;
 overflow-y: auto;
 padding-right: 5px;
 }
-
-.playlist-container::-webkit-scrollbar {
-width: 6px;
-}
-
-.playlist-container::-webkit-scrollbar-track {
-background: rgba(255,255,255,0.05);
-border-radius: 10px;
-}
-
-.playlist-container::-webkit-scrollbar-thumb {
-background: var(--rose);
-border-radius: 10px;
-}
-
+.playlist-container::-webkit-scrollbar { width: 6px; }
+.playlist-container::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+.playlist-container::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 10px; }
 .playlist-item {
 display: flex;
 align-items: center;
-justify-content: space-between;
-background: rgba(255,255,255,0.04);
+gap: 12px;
+background: rgba(255,255,255,0.03);
 border: 1px solid var(--glass-border);
-border-radius: 12px;
+border-radius: 14px;
 padding: 12px 14px;
-transition: all 0.3s;
+transition: all 0.3s ease;
 cursor: pointer;
+position: relative;
+overflow: hidden;
 }
-
+.playlist-item::before {
+content: '';
+position: absolute;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: linear-gradient(90deg, rgba(194,24,91,0.15), transparent);
+opacity: 0;
+transition: opacity 0.3s;
+}
 .playlist-item:hover {
-background: rgba(255,255,255,0.08);
-border-color: var(--rose);
+background: rgba(255,255,255,0.06);
+border-color: rgba(232,160,191,0.4);
 transform: translateX(4px);
 }
-
+.playlist-item:hover::before { opacity: 1; }
 .playlist-item.playing {
-background: linear-gradient(135deg, rgba(194,24,91,0.2), rgba(212,165,116,0.1));
+background: linear-gradient(135deg, rgba(194,24,91,0.25), rgba(212,165,116,0.1));
 border-color: var(--rose);
+box-shadow: 0 4px 20px rgba(194,24,91,0.3);
 }
-
+.playlist-item.playing::before { opacity: 1; }
+.playlist-item.loading {
+opacity: 0.6;
+}
+.playlist-item.error {
+border-color: rgba(244,67,54,0.5);
+}
+/* Music info */
 .music-info {
 display: flex;
 align-items: center;
-gap: 10px;
+gap: 12px;
 flex: 1;
 overflow: hidden;
+position: relative;
+z-index: 1;
 }
-
 .music-icon {
-font-size: 18px;
+font-size: 20px;
+flex-shrink: 0;
+transition: all 0.3s;
+}
+.playlist-item.playing .music-icon {
+display: none;
+}
+/* EQUALIZER ANIMATION - ESTILO SPOTIFY */
+.music-equalizer {
+display: none;
+align-items: flex-end;
+gap: 2px;
+height: 18px;
 flex-shrink: 0;
 }
-
+.playlist-item.playing .music-equalizer {
+display: flex;
+}
+.eq-bar {
+width: 3px;
+background: linear-gradient(180deg, var(--rose), var(--gold));
+border-radius: 2px;
+animation: eqBounce 0.8s ease-in-out infinite;
+}
+.eq-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+.eq-bar:nth-child(2) { height: 12px; animation-delay: 0.15s; }
+.eq-bar:nth-child(3) { height: 8px; animation-delay: 0.3s; }
+.eq-bar:nth-child(4) { height: 14px; animation-delay: 0.45s; }
+@keyframes eqBounce {
+0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
+50% { transform: scaleY(1); opacity: 1; }
+}
+/* Loading spinner */
+.music-loading {
+display: none;
+width: 18px; height: 18px;
+border: 2px solid rgba(255,255,255,0.2);
+border-top-color: var(--rose);
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+flex-shrink: 0;
+}
+.playlist-item.loading .music-loading { display: block; }
+.playlist-item.loading .music-icon,
+.playlist-item.loading .music-equalizer { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+/* Error icon */
+.music-error {
+display: none;
+font-size: 16px;
+flex-shrink: 0;
+}
+.playlist-item.error .music-error { display: block; }
+.playlist-item.error .music-icon,
+.playlist-item.error .music-equalizer { display: none; }
 .music-name {
 font-size: 13px;
 color: var(--text);
 white-space: nowrap;
 overflow: hidden;
 text-overflow: ellipsis;
+font-weight: 500;
+transition: color 0.3s;
 }
-
+.playlist-item.playing .music-name {
+color: var(--rose);
+font-weight: 600;
+}
+/* Play button */
 .music-play-btn {
-width: 36px;
-height: 36px;
+width: 38px; height: 38px;
 border-radius: 50%;
 background: linear-gradient(135deg, var(--rose-deep), var(--rose));
 border: none;
@@ -1087,28 +1148,68 @@ display: flex;
 align-items: center;
 justify-content: center;
 flex-shrink: 0;
-transition: all 0.3s;
+transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
 box-shadow: 0 2px 10px rgba(194,24,91,0.3);
+position: relative;
+z-index: 1;
 }
-
 .music-play-btn:hover {
 transform: scale(1.1);
-box-shadow: 0 4px 15px rgba(194,24,91,0.5);
+box-shadow: 0 4px 20px rgba(194,24,91,0.6);
 }
-
-.music-play-btn:active {
-transform: scale(0.95);
-}
-
+.music-play-btn:active { transform: scale(0.95); }
 .music-play-btn.playing {
-animation: pulseMusic 1s ease-in-out infinite;
+background: linear-gradient(135deg, var(--gold), var(--gold-light));
+animation: btnPulse 1.5s ease-in-out infinite;
 }
-
-@keyframes pulseMusic {
-0%, 100% { transform: scale(1); box-shadow: 0 2px 10px rgba(194,24,91,0.3); }
-50% { transform: scale(1.05); box-shadow: 0 4px 20px rgba(194,24,91,0.6); }
+@keyframes btnPulse {
+0%, 100% { box-shadow: 0 0 0 0 rgba(212,165,116,0.5); }
+50% { box-shadow: 0 0 0 8px rgba(212,165,116,0); }
 }
-
+/* Progress bar */
+.music-progress {
+position: absolute;
+bottom: 0; left: 0;
+height: 2px;
+background: linear-gradient(90deg, var(--rose), var(--gold));
+width: 0%;
+transition: width 0.3s linear;
+z-index: 2;
+}
+.playlist-item.playing .music-progress {
+animation: progressGlow 2s ease-in-out infinite;
+}
+@keyframes progressGlow {
+0%, 100% { box-shadow: 0 0 4px var(--rose); }
+50% { box-shadow: 0 0 8px var(--rose); }
+}
+/* Toast notification (substitui o alert) */
+.audio-toast {
+position: fixed;
+top: 80px;
+left: 50%;
+transform: translateX(-50%) translateY(-20px);
+background: rgba(30,30,58,0.95);
+backdrop-filter: blur(20px);
+border: 1px solid var(--glass-border);
+padding: 12px 24px;
+border-radius: 30px;
+font-size: 12px;
+color: var(--text);
+z-index: 3000;
+opacity: 0;
+transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+pointer-events: none;
+box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.audio-toast.show {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+}
+.audio-toast-icon { font-size: 16px; }
 /* Visualizer animation */
 .music-visualizer {
 display: none;
@@ -1117,30 +1218,101 @@ gap: 2px;
 height: 20px;
 margin-left: 8px;
 }
-
 .playlist-item.playing .music-visualizer {
 display: flex;
 }
-
 .playlist-item.playing .music-icon {
 display: none;
 }
-
 .visualizer-bar {
 width: 3px;
 background: var(--rose);
 border-radius: 2px;
 animation: visualize 0.5s ease-in-out infinite;
 }
-
 .visualizer-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
 .visualizer-bar:nth-child(2) { height: 14px; animation-delay: 0.1s; }
 .visualizer-bar:nth-child(3) { height: 10px; animation-delay: 0.2s; }
 .visualizer-bar:nth-child(4) { height: 16px; animation-delay: 0.3s; }
-
 @keyframes visualize {
 0%, 100% { transform: scaleY(0.5); }
 50% { transform: scaleY(1); }
+}
+/* ============ PREMIUM: VINIL GIRATÓRIO ============ */
+.vinyl-container {
+position: fixed;
+bottom: 20px;
+left: 20px;
+z-index: 1000;
+width: 60px;
+height: 60px;
+border-radius: 50%;
+background: radial-gradient(circle, #1a1a1a 30%, #000 31%, #000 33%, #1a1a1a 34%, #1a1a1a 40%, #000 41%, #000 43%, #1a1a1a 44%);
+box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(255,255,255,0.1);
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+transition: transform 0.3s;
+}
+@media (max-width: 480px) {
+.vinyl-container { width: 50px; height: 50px; bottom: 15px; left: 15px; }
+}
+.vinyl-container::before {
+content: '';
+width: 18px;
+height: 18px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(--rose), var(--gold));
+box-shadow: inset 0 0 0 2px rgba(0,0,0,0.3);
+}
+.vinyl-container.spinning {
+animation: vinylSpin 3s linear infinite;
+}
+.vinyl-container::after {
+content: '💖';
+position: absolute;
+font-size: 8px;
+}
+@keyframes vinylSpin {
+from { transform: rotate(0deg); }
+to { transform: rotate(360deg); }
+}
+.vinyl-container:active { transform: scale(0.95); }
+/* ============ PREMIUM: TEMA CLARO ============ */
+body.light-theme {
+--darker: #f5e6e0;
+--dark: #fff5f0;
+--text: #2d1f2e;
+--text-muted: rgba(45,31,46,0.6);
+--glass: rgba(255,255,255,0.4);
+--glass-border: rgba(194,24,91,0.2);
+}
+body.light-theme .parallax-overlay { opacity: 0.3; }
+body.light-theme .modal { background: linear-gradient(135deg, #fff5f0, #ffe8e0); }
+body.light-theme .letter-paper { background: linear-gradient(180deg, #fff5f0, #ffe8e0); }
+.theme-toggle {
+position: fixed;
+top: 70px;
+right: 20px;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: var(--glass);
+backdrop-filter: blur(20px);
+border: 1px solid var(--glass-border);
+color: var(--text);
+font-size: 20px;
+cursor: pointer;
+z-index: 1000;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.3s;
+}
+.theme-toggle:active { transform: scale(0.9); }
+@media (max-width: 480px) {
+.theme-toggle { top: 65px; right: 15px; width: 40px; height: 40px; font-size: 18px; }
 }
 </style>
 </head>
@@ -1150,18 +1322,15 @@ animation: visualize 0.5s ease-in-out infinite;
 <div class="parallax-bg" id="parallax2" style="background-image: url('bg/bg2.jpg');"></div>
 <div class="parallax-bg" id="parallax3" style="background-image: url('bg/bg3.jpg');"></div>
 <div class="parallax-overlay"></div>
-
 <!-- LOADING -->
 <div class="loading-screen" id="loadingScreen">
 <div class="loading-heart">💖</div>
 <div class="loading-text">Nossa história...</div>
 <div class="loading-bar"><div class="loading-bar-fill"></div></div>
 </div>
-
 <!-- FLOATING HEARTS -->
 <div class="floating-hearts" id="floatingHearts"></div>
 <canvas id="particles-canvas"></canvas>
-
 <!-- NAVIGATION -->
 <nav class="nav" id="navbar">
 <a href="#hero" class="active">Início</a>
@@ -1171,7 +1340,6 @@ animation: visualize 0.5s ease-in-out infinite;
 <a href="#timeline">Momentos</a>
 <a href="#letter">Carta</a>
 </nav>
-
 <!-- MUSIC PLAYER -->
 <div class="music-player">
 <div class="now-playing" id="nowPlaying">🎵 Nossa Música</div>
@@ -1179,7 +1347,8 @@ animation: visualize 0.5s ease-in-out infinite;
 <span id="musicIcon">▶</span>
 </button>
 </div>
-
+<!-- PREMIUM: Toggle Tema -->
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Mudar tema">🌙</button>
 <!-- ==================== HERO ==================== -->
 <section class="hero" id="hero">
 <div class="hero-badge">💍 OFICIALMENTE JUNTOS 💍</div>
@@ -1192,7 +1361,6 @@ animation: visualize 0.5s ease-in-out infinite;
 <div class="scroll-arrow"></div>
 </div>
 </section>
-
 <!-- ==================== COUNTER ==================== -->
 <section id="counter">
 <div class="fade-in">
@@ -1209,7 +1377,6 @@ animation: visualize 0.5s ease-in-out infinite;
 <div class="counter-card"><div class="counter-number" id="cSeconds">0</div><div class="counter-label">Segundos</div><div class="counter-emoji">✨</div></div>
 </div>
 </section>
-
 <!-- ==================== VIDEO DO PEDIDO ==================== -->
 <section id="video">
 <div class="fade-in">
@@ -1227,7 +1394,6 @@ Seu navegador não suporta vídeo.
 <div class="video-sub">12 de Junho de 2026</div>
 </div>
 </section>
-
 <!-- ==================== GALLERY ==================== -->
 <section id="gallery">
 <div class="fade-in">
@@ -1238,7 +1404,6 @@ Seu navegador não suporta vídeo.
 <!-- Fotos serão adicionadas via JS -->
 </div>
 </section>
-
 <!-- ==================== NEXT DATES ==================== -->
 <section id="dates">
 <div class="fade-in">
@@ -1249,7 +1414,6 @@ Seu navegador não suporta vídeo.
 <!-- Preenchido via JS -->
 </div>
 </section>
-
 <!-- ==================== TIMELINE ==================== -->
 <section id="timeline">
 <div class="fade-in">
@@ -1295,7 +1459,6 @@ Seu navegador não suporta vídeo.
 </div>
 </div>
 </section>
-
 <!-- ==================== MEMORY MAP ==================== -->
 <section id="memories">
 <div class="fade-in">
@@ -1337,7 +1500,6 @@ Seu navegador não suporta vídeo.
 </div>
 </div>
 </section>
-
 <!-- ==================== QUIZ ==================== -->
 <section id="quiz">
 <div class="fade-in">
@@ -1351,7 +1513,6 @@ Seu navegador não suporta vídeo.
 <button class="quiz-next" id="quizNext" onclick="nextQuestion()" style="display:none;">Próxima Pergunta →</button>
 </div>
 </section>
-
 <!-- ==================== LOVE LETTER ==================== -->
 <section id="letter">
 <div class="letter-container fade-in">
@@ -1369,7 +1530,6 @@ Seu navegador não suporta vídeo.
 </div>
 </div>
 </section>
-
 <!-- ==================== ACHIEVEMENTS ==================== -->
 <section id="achievements">
 <div class="fade-in">
@@ -1380,7 +1540,6 @@ Seu navegador não suporta vídeo.
 <!-- Preenchido via JS -->
 </div>
 </section>
-
 <!-- ==================== ABRIR QUANDO ==================== -->
 <section id="openwhen">
 <div class="fade-in">
@@ -1414,7 +1573,6 @@ Seu navegador não suporta vídeo.
 </div>
 </div>
 </section>
-
 <!-- ==================== RANDOM MESSAGE ==================== -->
 <section id="message">
 <div class="fade-in">
@@ -1426,7 +1584,6 @@ Seu navegador não suporta vídeo.
 <button class="message-btn" onclick="newMessage()">✨ Nova Mensagem</button>
 </div>
 </section>
-
 <!-- ==================== 10 REASONS ==================== -->
 <section>
 <div class="fade-in">
@@ -1446,7 +1603,6 @@ Seu navegador não suporta vídeo.
 <div class="reason-card"><div class="reason-number">10</div><div class="reason-text">Porque simplesmente você é você. 💖</div></div>
 </div>
 </section>
-
 <!-- ==================== SURPRISES ==================== -->
 <section class="surprise-section">
 <div class="fade-in">
@@ -1476,14 +1632,12 @@ Seu navegador não suporta vídeo.
 </button>
 </div>
 </section>
-
 <!-- ==================== FOOTER ==================== -->
 <footer class="footer">
 <div class="footer-heart">💖</div>
 <div class="footer-text">Para Sempre Juntos</div>
 <div class="footer-sub">04 • 04 • 2026 💍 12 • 06 • 2026</div>
 </footer>
-
 <!-- ==================== MODALS ==================== -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
 <div class="modal" id="modalContent">
@@ -1491,27 +1645,27 @@ Seu navegador não suporta vídeo.
 <div id="modalBody"></div>
 </div>
 </div>
-
 <!-- ==================== LIGHTBOX ==================== -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
 <button class="lightbox-close">✕</button>
 <img id="lightboxImg" src="" alt="">
 </div>
-
 <!-- ==================== AUDIO ==================== -->
 <audio id="bgMusic" loop preload="auto">
-<source src="music/nossa-musica.mp3">
+<source src="music/eu-e-minha-casa.mp3">
 </audio>
+<!-- Toast de notificação -->
+<div class="audio-toast" id="audioToast"></div>
+<!-- PREMIUM: Disco Giratório -->
+<div class="vinyl-container" id="vinyl" onclick="toggleMusic()"></div>
 
 <script>
-  
 // ============ LOADING ============
 window.addEventListener('load', () => {
 setTimeout(() => {
 document.getElementById('loadingScreen').classList.add('hidden');
 }, 2500);
 });
-
 // ============ PARALLAX BACKGROUND CHANGE ============
 const parallaxBgs = document.querySelectorAll('.parallax-bg');
 let currentBg = 0;
@@ -1521,7 +1675,6 @@ currentBg = (currentBg + 1) % parallaxBgs.length;
 parallaxBgs[currentBg].classList.add('active');
 }
 setInterval(changeParallax, 8000);
-
 // ============ PARTICLES ============
 const canvas = document.getElementById('particles-canvas');
 const ctx = canvas.getContext('2d');
@@ -1564,7 +1717,6 @@ particles.forEach(p => { p.update(); p.draw(); });
 requestAnimationFrame(animateParticles);
 }
 animateParticles();
-
 // ============ FLOATING HEARTS ============
 function createFloatingHearts() {
 const container = document.getElementById('floatingHearts');
@@ -1581,10 +1733,9 @@ container.appendChild(heart);
 }
 }
 createFloatingHearts();
-
 // ============ CLICK HEARTS (NOVA FUNCIONALIDADE #10) ============
 document.addEventListener('click', (e) => {
-const hearts = ['💖', '💕', '✨', '💗', '💝', '🌹'];
+const hearts = ['💖', '💕', '✨', '💗', '', '🌹'];
 for (let i = 0; i < 3; i++) {
 const heart = document.createElement('div');
 heart.className = 'click-heart';
@@ -1597,7 +1748,6 @@ document.body.appendChild(heart);
 setTimeout(() => heart.remove(), 1500);
 }
 });
-
 // ============ COUNTER ============
 const startDate = new Date('2026-04-04T00:00:00');
 function updateCounter() {
@@ -1623,7 +1773,6 @@ document.getElementById('cSeconds').textContent = totalSeconds.toLocaleString();
 }
 updateCounter();
 setInterval(updateCounter, 1000);
-
 // ============ GALLERY (NOVA FUNCIONALIDADE #3) ============
 const photos = [
 { src: 'photos/foto1.jpg', alt: 'Nossa foto 1' },
@@ -1644,7 +1793,6 @@ grid.appendChild(item);
 });
 }
 loadGallery();
-
 function openLightbox(src) {
 document.getElementById('lightboxImg').src = src;
 document.getElementById('lightbox').classList.add('active');
@@ -1654,7 +1802,6 @@ function closeLightbox() {
 document.getElementById('lightbox').classList.remove('active');
 document.body.style.overflow = '';
 }
-
 // ============ NEXT DATES (NOVA FUNCIONALIDADE #4) ============
 function getNextAnniversary(startDate, now) {
 let year = now.getFullYear();
@@ -1711,7 +1858,6 @@ grid.appendChild(card);
 }
 updateNextDates();
 setInterval(updateNextDates, 60000);
-
 // ============ QUIZ DO CASAL (NOVA FUNCIONALIDADE #6) ============
 const quizQuestions = [
 { q: 'Em que dia começamos a namorar?', options: ['04 de Abril', '12 de Junho', '14 de Fevereiro', '31 de Dezembro'], correct: 0 },
@@ -1774,7 +1920,6 @@ document.getElementById('quizScore').textContent = 'Acertos: 0 / 0';
 loadQuestion();
 }
 loadQuestion();
-
 // ============ ACHIEVEMENTS (NOVA FUNCIONALIDADE #8) ============
 const achievements = [
 { icon: '💫', name: 'Primeiro Encontro', date: '04/04/2026', unlocked: true },
@@ -1800,7 +1945,6 @@ grid.appendChild(card);
 });
 }
 loadAchievements();
-
 // ============ ABRIR QUANDO (NOVA FUNCIONALIDADE #7) ============
 const openWhenLetters = {
 sad: { emoji: '😢', title: 'Quando estiver triste', text: 'Ei, meu amor... 💖<br><br>Sei que hoje está difícil, mas quero que você lembre de uma coisa: <em>você nunca está sozinha</em>. Eu estou aqui, sempre.<br><br>Respira fundo. Pensa em nós. Pensa em tudo que já superamos juntos.<br><br>Você é forte, incrível e muito amada. Essa tristeza vai passar, e eu vou estar ao seu lado em cada segundo. 🌹<br><br><em>Te amo mais que tudo.</em>' },
@@ -1817,7 +1961,6 @@ document.getElementById('modalBody').innerHTML = `<div class="modal-emoji">${let
 document.getElementById('modalOverlay').classList.add('active');
 document.body.style.overflow = 'hidden';
 }
-
 // ============ RANDOM MESSAGE (NOVA FUNCIONALIDADE #9) ============
 const messages = [
 'Você é o meu lugar favorito no mundo. 💖',
@@ -1844,7 +1987,6 @@ textEl.textContent = messages[Math.floor(Math.random() * messages.length)];
 textEl.style.opacity = '1';
 }, 400);
 }
-
 // ============ MUSIC ============
 const bgMusic = document.getElementById('bgMusic');
 const musicBtn = document.getElementById('musicBtn');
@@ -1853,7 +1995,7 @@ const nowPlaying = document.getElementById('nowPlaying');
 let isPlaying = false;
 bgMusic.volume = 0.3;
 bgMusic.addEventListener('error', () => {
-console.log('Áudio não encontrado. Verifique music/nossa-musica.mp3');
+console.log('Áudio não encontrado. Verifique music/eu-e-minha-casa.mp3');
 });
 function toggleMusic() {
 if (isPlaying) {
@@ -1871,7 +2013,6 @@ if(nowPlaying) nowPlaying.style.opacity = '1';
 }
 isPlaying = !isPlaying;
 }
-
 // ============ SCROLL ============
 const observer = new IntersectionObserver((entries) => {
 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
@@ -1892,41 +2033,47 @@ a.classList.remove('active');
 if (a.getAttribute('href') === '#' + current) a.classList.add('active');
 });
 });
-
 // ============ MODALS ============
 const modalData = {
 reasons: { emoji: '💌', title: 'Por Que Te Amo', text: '<p style="line-height:1.9">💖 <em>Seu sorriso</em> - ilumina tudo<br>🌙 <em>Seu abraço</em> - meu lugar seguro<br>✨ <em>Seu olhar</em> - me faz esquecer o mundo<br>🎵 <em>Sua risada</em> - a melhor melodia<br>🌹 <em>Seu carinho</em> - me faz especial<br>💫 <em>Seu jeito</em> - único e perfeito<br>❤️ <em>Você inteira</em> - é tudo pra mim</p>' },
-playlist: { 
-emoji: '🎵', 
-title: 'Nossa Playlist', 
+playlist: {
+emoji: '🎵',
+title: 'Nossa Playlist',
 text: '<div class="playlist-container" id="playlistContainer">' +
-'<div class="playlist-item" data-music="music/perfect.mp3">' +
-'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">Perfect - Ed Sheeran</span></div>' +
+'<div class="playlist-item" data-music="music/perfect.mp3" data-fallback="music/nossa-musica.mp3">' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Perfect - Ed Sheeran</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'<div class="music-progress"></div>' +
 '</div>' +
-'<div class="playlist-item" data-music="music/all-of-me.mp3">' +
-'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">All of Me - John Legend</span></div>' +
+'<div class="playlist-item" data-music="music/all-of-me.mp3" data-fallback="music/nossa-musica.mp3">' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">All of Me - John Legend</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'<div class="music-progress"></div>' +
 '</div>' +
-'<div class="playlist-item" data-music="music/eu-e-minha-casa.mp3">' +
-'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">eu e minha casa - Julliany Souza</span></div>' +
+'<div class="playlist-item" data-music="music/eu-e-minha-casa.mp3" data-fallback="music/eu-e-minha-casa.mp3">' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">️</span><span class="music-name">eu e minha casa - Julliany Souza</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'<div class="music-progress"></div>' +
 '</div>' +
-'<div class="playlist-item" data-music="music/thousand-years.mp3">' +
-'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">A Thousand Years - Christina Perri</span></div>' +
+'<div class="playlist-item" data-music="music/thousand-years.mp3" data-fallback="music/nossa-musica.mp3">' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon"></span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">A Thousand Years - Christina Perri</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'<div class="music-progress"></div>' +
 '</div>' +
-'<div class="playlist-item" data-music="music/thinking-out-loud.mp3">' +
-'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">Thinking Out Loud - Ed Sheeran</span></div>' +
+'<div class="playlist-item" data-music="music/thinking-out-loud.mp3" data-fallback="music/nossa-musica.mp3">' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">️</span><span class="music-name">Thinking Out Loud - Ed Sheeran</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'<div class="music-progress"></div>' +
 '</div>' +
-'<div class="playlist-item" data-music="music/cant-help.mp3">' +
-'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">Can\'t Help Falling in Love - Elvis</span></div>' +
+'<div class="playlist-item" data-music="music/cant-help.mp3" data-fallback="music/nossa-musica.mp3">' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">⚠️</span><span class="music-name">Can\'t Help Falling in Love - Elvis</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'<div class="music-progress"></div>' +
 '</div>' +
-'<div class="playlist-item" data-music="music/make-you-feel.mp3">' +
-'<div class="music-info"><span class="music-icon">🎵</span><span class="music-name">Make You Feel My Love - Adele</span></div>' +
+'<div class="playlist-item" data-music="music/make-you-feel.mp3" data-fallback="music/nossa-musica.mp3">' +
+'<div class="music-info"><div class="music-loading"></div><span class="music-icon">🎵</span><div class="music-equalizer"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div><span class="music-error">️</span><span class="music-name">Make You Feel My Love - Adele</span></div>' +
 '<button class="music-play-btn" onclick="togglePlaylistMusic(this)">▶</button>' +
+'<div class="music-progress"></div>' +
 '</div>' +
 '</div><div class="sparkle-divider"><span></span><div class="dot"></div><span></span></div><p style="font-size:12px;margin-top:15px">Cada música me lembra você 💕</p>' +
 '<audio id="playlistAudio" preload="auto"></audio>'
@@ -1946,7 +2093,6 @@ if (event && event.target !== event.currentTarget && !event.target.classList.con
 document.getElementById('modalOverlay').classList.remove('active');
 document.body.style.overflow = '';
 }
-
 // ============ SMOOTH SCROLL ============
 document.querySelectorAll('.nav a').forEach(a => {
 a.addEventListener('click', (e) => {
@@ -1959,51 +2105,110 @@ document.addEventListener('keydown', (e) => {
 if (e.key === 'Escape') { closeModal(); closeLightbox(); }
 if (e.key === 'm' || e.key === 'M') toggleMusic();
 });
-
-// ============ PLAYLIST MUSIC PLAYER ============
+// ============ PLAYLIST MUSIC PLAYER (MELHORADO) ============
 let currentPlaylistMusic = null;
 let isPlaylistPlaying = false;
-
+let progressInterval = null;
+// Criar toast notification
+function showToast(message, icon = '🎵') {
+let toast = document.getElementById('audioToast');
+if (!toast) {
+toast = document.createElement('div');
+toast.id = 'audioToast';
+toast.className = 'audio-toast';
+document.body.appendChild(toast);
+}
+toast.innerHTML = `<span class="audio-toast-icon">${icon}</span><span>${message}</span>`;
+toast.classList.add('show');
+setTimeout(() => toast.classList.remove('show'), 2500);
+}
 function togglePlaylistMusic(btn) {
 const playlistItem = btn.closest('.playlist-item');
-const musicSrc = playlistItem.getAttribute('data-music');
+let musicSrc = playlistItem.getAttribute('data-music');
+const fallbackSrc = playlistItem.getAttribute('data-fallback');
 const audio = document.getElementById('playlistAudio');
 const allItems = document.querySelectorAll('.playlist-item');
 const allBtns = document.querySelectorAll('.music-play-btn');
-
 // Se clicar na mesma música que está tocando
 if (currentPlaylistMusic === playlistItem && isPlaylistPlaying) {
 audio.pause();
 btn.textContent = '▶';
 btn.classList.remove('playing');
 playlistItem.classList.remove('playing');
+playlistItem.classList.remove('loading');
 isPlaylistPlaying = false;
 currentPlaylistMusic = null;
+clearInterval(progressInterval);
 return;
 }
-
 // Para todas as outras músicas
-allItems.forEach(item => item.classList.remove('playing'));
+allItems.forEach(item => {
+item.classList.remove('playing');
+item.classList.remove('loading');
+item.classList.remove('error');
+});
 allBtns.forEach(b => {
 b.textContent = '▶';
 b.classList.remove('playing');
 });
-
-// Toca a nova música
+clearInterval(progressInterval);
+// Mostra loading
+playlistItem.classList.add('loading');
+btn.textContent = '';
+// Tenta tocar a música
 audio.src = musicSrc;
-audio.volume = 0.3;
-audio.play().then(() => {
+audio.volume = 0.4;
+const playPromise = audio.play();
+if (playPromise !== undefined) {
+playPromise.then(() => {
+// Sucesso!
+playlistItem.classList.remove('loading');
+playlistItem.classList.add('playing');
+btn.textContent = '';
+btn.classList.add('playing');
 currentPlaylistMusic = playlistItem;
 isPlaylistPlaying = true;
+startProgress(btn, playlistItem);
+}).catch(err => {
+// Erro - tenta o fallback
+console.log('Erro ao tocar:', musicSrc, err);
+playlistItem.classList.remove('loading');
+if (fallbackSrc && musicSrc !== fallbackSrc) {
+showToast('Usando música alternativa 🎵', '');
+musicSrc = fallbackSrc;
+audio.src = musicSrc;
+audio.play().then(() => {
+playlistItem.classList.add('playing');
 btn.textContent = '⏸';
 btn.classList.add('playing');
-playlistItem.classList.add('playing');
-}).catch(err => {
-console.log('Erro ao tocar música:', err);
-alert('🎵 Clique novamente para ativar o áudio');
+currentPlaylistMusic = playlistItem;
+isPlaylistPlaying = true;
+startProgress(btn, playlistItem);
+}).catch(() => {
+showMusicError(playlistItem, btn);
+});
+} else {
+showMusicError(playlistItem, btn);
+}
 });
 }
-
+}
+function showMusicError(playlistItem, btn) {
+playlistItem.classList.add('error');
+btn.textContent = '️';
+showToast('Música não disponível 😢', '️');
+}
+function startProgress(btn, playlistItem) {
+const audio = document.getElementById('playlistAudio');
+const progressBar = playlistItem.querySelector('.music-progress');
+clearInterval(progressInterval);
+progressInterval = setInterval(() => {
+if (audio.duration) {
+const progress = (audio.currentTime / audio.duration) * 100;
+progressBar.style.width = progress + '%';
+}
+}, 200);
+}
 // Quando a música terminar
 document.addEventListener('DOMContentLoaded', () => {
 const audio = document.getElementById('playlistAudio');
@@ -2015,12 +2220,57 @@ allBtns.forEach(b => {
 b.textContent = '▶';
 b.classList.remove('playing');
 });
-allItems.forEach(item => item.classList.remove('playing'));
+allItems.forEach(item => {
+item.classList.remove('playing');
+item.classList.remove('loading');
+const pb = item.querySelector('.music-progress');
+if (pb) pb.style.width = '0%';
+});
 isPlaylistPlaying = false;
 currentPlaylistMusic = null;
+clearInterval(progressInterval);
+});
+audio.addEventListener('error', () => {
+const item = currentPlaylistMusic;
+if (item) {
+item.classList.remove('playing');
+item.classList.add('error');
+}
 });
 }
 });
+// ============ PREMIUM: TEMA CLARO/ESCURO ============
+function toggleTheme() {
+document.body.classList.toggle('light-theme');
+const btn = document.getElementById('themeToggle');
+if (document.body.classList.contains('light-theme')) {
+btn.textContent = '☀️';
+localStorage.setItem('ivy-theme', 'light');
+} else {
+btn.textContent = '🌙';
+localStorage.setItem('ivy-theme', 'dark');
+}
+}
+// Carregar tema salvo ao abrir o site
+(function() {
+const savedTheme = localStorage.getItem('ivy-theme');
+if (savedTheme === 'light') {
+document.body.classList.add('light-theme');
+const btn = document.getElementById('themeToggle');
+if (btn) btn.textContent = '☀️';
+}
+})();
+// ============ PREMIUM: VINIL SYNC ============
+const vinyl = document.getElementById('vinyl');
+const originalToggle = toggleMusic;
+toggleMusic = function() {
+originalToggle();
+if (isPlaying) {
+vinyl.classList.add('spinning');
+} else {
+vinyl.classList.remove('spinning');
+}
+};
 </script>
 </body>
 </html>
