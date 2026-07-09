@@ -8,6 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <meta http-equiv="Cache-Control" content="max-age=0" />
 <title>💖 Nosso Amor - Ivy</title>
+
 <style>
 /* ===== IMPORTAÇÃO DE FONTES ===== */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&family=Great+Vibes&display=swap');
@@ -30,6 +31,27 @@
   --bg-secondary: #1a1a2e;
   --card-bg: rgba(255,255,255,0.06);
   --card-border: rgba(255,255,255,0.12);
+}
+/* ===== mural de mensagem  ===== */
+.mural-shortcut {
+  position: fixed;
+  bottom: 150px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--rose-deep), var(--rose));
+  border: 1px solid var(--gold);
+  color: white;
+  font-size: 19px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 8px 25px rgba(194,24,91,.35);
+  transition: all .3s;
+}
+
+.mural-shortcut:hover {
+  transform: scale(1.1);
 }
 
 /* ===== TEMA CLARO (LIGHT THEME) ===== */
@@ -1697,6 +1719,116 @@ body.focus-mode section.focus-section { opacity: 1; }
   z-index: -1;
   transition: width 0.3s, height 0.3s, background 0.3s;
 }
+.message-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.message-actions button {
+  border: none;
+  padding: 7px 13px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+}
+
+.message-actions button:first-child {
+  color: var(--gold);
+}
+
+.message-actions button:last-child {
+  color: var(--rose);
+}
+
+.mural-shortcut {
+  position: fixed !important;
+  right: 20px !important;
+  bottom: 145px !important;
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, var(--rose-deep), var(--rose)) !important;
+  border: 2px solid var(--gold) !important;
+  color: white !important;
+  font-size: 22px !important;
+  cursor: pointer !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 8px 30px rgba(194,24,91,.55) !important;
+}
+
+@media (max-width: 600px) {
+  .mural-shortcut {
+    right: 15px !important;
+    bottom: 125px !important;
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 20px !important;
+  }
+
+  .message-actions button {
+    font-size: 11px;
+    padding: 6px 11px;
+  }
+}
+.crud-message {
+  position: relative;
+  padding-bottom: 14px;
+}
+
+.crud-message p {
+  margin: 6px 0;
+  color: var(--text);
+}
+
+.crud-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.crud-actions button {
+  padding: 7px 12px !important;
+  border-radius: 18px !important;
+  border: 1px solid var(--card-border) !important;
+  background: rgba(255,255,255,.08) !important;
+  color: var(--text) !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+}
+
+.mural-shortcut {
+  position: fixed !important;
+  right: 20px !important;
+  bottom: 145px !important;
+  width: 54px !important;
+  height: 54px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, var(--rose-deep), var(--rose)) !important;
+  border: 2px solid var(--gold) !important;
+  color: white !important;
+  font-size: 24px !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 600px) {
+  .mural-shortcut {
+    right: 14px !important;
+    bottom: 120px !important;
+    display: flex !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1730,7 +1862,9 @@ body.focus-mode section.focus-section { opacity: 1; }
   <a href="#letter">Carta</a>
   <a href="#newfeatures">Novidades</a>
 </nav>
-
+<button class="mural-shortcut" onclick="document.getElementById('muralRecados').scrollIntoView({behavior:'smooth'})">
+  💌
+</button>
 <!-- MUSIC PLAYER -->
 <div class="music-player">
   <div class="now-playing" id="nowPlaying">🎵 Nossa Música</div>
@@ -1930,7 +2064,7 @@ body.focus-mode section.focus-section { opacity: 1; }
   </div>
 
   <!-- MURAL DE RECADOS -->
-  <div class="message-board fade-in glow-card" style="margin-bottom:30px;">
+  <div id="muralRecados" class="message-board fade-in glow-card" style="margin-bottom:30px;">
     <div style="text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:12px;">📝 Mural de Recados</div>
     <textarea id="messageInput" placeholder="Escreva um recado especial... 💕"></textarea>
     <button onclick="saveMessage()">💌 Enviar Recado</button>
@@ -2081,7 +2215,6 @@ window.addEventListener('load', () => {
     showDailyMessage();
     initMemoryGame();
     initTicTacToe();
-    loadMessages();
     updateRelationshipProgress();
     updateLoveWeather();
   }, 2500);
@@ -2823,26 +2956,18 @@ function toggleTheme() {
 })();
 
 // ============ CURSOR GLOW ============
-const cursorGlow = document.getElementById('cursorGlow');
-document.addEventListener('mousemove', (e) => {
-  cursorGlow.style.left = e.clientX + 'px';
-  cursorGlow.style.top = e.clientY + 'px';
-});
+const cursorGlow = document.getElementById("cursorGlow");
+
+if (cursorGlow) {
+  document.addEventListener("mousemove", (e) => {
+    cursorGlow.style.left = e.clientX + "px";
+    cursorGlow.style.top = e.clientY + "px";
+  });
+}
 
 // ============ NOVAS FUNCIONALIDADES ============
 
-// 1. MURAL DE RECADOS
-function saveMessage() {
-  const input = document.getElementById('messageInput');
-  const text = input.value.trim();
-  if (!text) { showToast('✏️ Escreva um recado primeiro!', '✏️'); return; }
-  const messages = JSON.parse(localStorage.getItem('loveMessages') || '[]');
-  messages.push({ text, date: new Date().toLocaleDateString('pt-BR') });
-  localStorage.setItem('loveMessages', JSON.stringify(messages));
-  input.value = '';
-  loadMessages();
-  showToast('💌 Recado salvo com amor!', '💌');
-}
+
 function loadMessages() {
   const list = document.getElementById('messageList');
   const messages = JSON.parse(localStorage.getItem('loveMessages') || '[]');
@@ -2942,13 +3067,138 @@ function updateRelationshipProgress() {
 updateRelationshipProgress();
 
 // ============ INICIALIZAÇÃO ============
-loadMessages();
+
 </script>
 <div id="cursorGlow"></div>
-<script type="module" src="./firebase.js"></script>
-<script type="module" src="./chat.js"></script>
-<script src="./app.js"></script>
-<script src="./achievements.js"></script>
 
+<script src="./app.js"></script>
+<script src="./achievements.js" defer></script>
+
+  const CURRENT_VERSION = "1.0.1";
+
+  async function checkForUpdate() {
+    try {
+      const response = await fetch("./version.json?t=" + new Date().getTime());
+      const data = await response.json();
+
+      if (data.version !== CURRENT_VERSION) {
+        localStorage.clear();
+        sessionStorage.clear();
+
+        if ("caches" in window) {
+          const cacheNames = await caches.keys();
+          await Promise.all(cacheNames.map(name => caches.delete(name)));
+        }
+
+        window.location.reload(true);
+      }
+    } catch (error) {
+      console.log("Verificação de atualização falhou:", error);
+    }
+  }
+
+  setInterval(checkForUpdate, 10000);
+  checkForUpdate();
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getDatabase,
+  ref,
+  push,
+  onValue,
+  update,
+  remove,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBleifyVN_xAJqJeRkLWgb2fe2TL_c07dM",
+  authDomain: "ivy-mural.firebaseapp.com",
+  databaseURL: "https://ivy-mural-default-rtdb.firebaseio.com",
+  projectId: "ivy-mural",
+  storageBucket: "ivy-mural.firebasestorage.app",
+  messagingSenderId: "1016315335181",
+  appId: "1:1016315335181:web:4c800884e35d0fa7ed7b44"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const muralRef = ref(db, "muralRecados");
+
+const input = document.getElementById("messageInput");
+const list = document.getElementById("messageList");
+
+window.saveMessage = async function () {
+  const text = input.value.trim();
+  if (!text) return;
+
+  await push(muralRef, {
+    author: "Pabricio",
+    text,
+    date: new Date().toLocaleDateString("pt-BR"),
+    time: new Date().toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit"
+    }),
+    edited: false,
+    createdAt: serverTimestamp()
+  });
+
+  input.value = "";
+};
+
+onValue(muralRef, (snapshot) => {
+  list.innerHTML = "";
+
+  const data = snapshot.val();
+
+  if (!data) {
+    list.innerHTML = `<div class="message-item">💌 Nenhum recado ainda...</div>`;
+    return;
+  }
+
+  Object.entries(data).reverse().forEach(([id, msg]) => {
+    const item = document.createElement("div");
+    item.className = "message-item crud-message";
+
+    const content = document.createElement("div");
+    content.innerHTML = `
+      <strong>💖 ${msg.author || "Ivy"}</strong>
+      <p>${msg.text || ""}</p>
+      <small>${msg.date || ""} ${msg.time ? "às " + msg.time : ""} ${msg.edited ? " · editado" : ""}</small>
+    `;
+
+    const actions = document.createElement("div");
+    actions.className = "crud-actions";
+
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "✏️ Editar";
+    editBtn.onclick = async () => {
+      const novoTexto = prompt("Editar mensagem:", msg.text || "");
+      if (!novoTexto || !novoTexto.trim()) return;
+
+      await update(ref(db, `muralRecados/${id}`), {
+        text: novoTexto.trim(),
+        edited: true
+      });
+    };
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "🗑️ Apagar";
+    deleteBtn.onclick = async () => {
+      if (!confirm("Deseja apagar esta mensagem?")) return;
+      await remove(ref(db, `muralRecados/${id}`));
+    };
+
+    actions.appendChild(editBtn);
+    actions.appendChild(deleteBtn);
+
+    item.appendChild(content);
+    item.appendChild(actions);
+    list.appendChild(item);
+  });
+});
+</script>
 </body>
 </html>

@@ -4,7 +4,9 @@ import {
   ref,
   push,
   onValue,
-  serverTimestamp
+  serverTimestamp,
+  update,
+  remove
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
 const firebaseConfig = {
@@ -21,4 +23,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-export { database, ref, push, onValue, serverTimestamp };
+export { database, ref, push, onValue, serverTimestamp, update, remove };
