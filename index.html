@@ -2062,10 +2062,16 @@ body.focus-mode section.focus-section { opacity: 1; }
     <div class="oracle-result" id="oracleResult">Clique no botão para descobrir seu destino 💫</div>
     <button style="margin-top:12px;background:linear-gradient(135deg,var(--rose-deep),var(--rose));color:white;border:none;padding:10px 30px;border-radius:30px;cursor:pointer;font-size:13px;width:100%;transition:transform 0.3s;" onclick="getOracle()" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">✨ Perguntar ao Oráculo</button>
   </div>
-
+  
+  
   <!-- MURAL DE RECADOS -->
   <div id="muralRecados" class="message-board fade-in glow-card" style="margin-bottom:30px;">
     <div style="text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:12px;">📝 Mural de Recados</div>
+    <input 
+  id="authorInput" 
+  type="text" 
+  placeholder="Seu nome... 💖"
+  style="width:100%;margin-bottom:10px;padding:12px;border-radius:14px;border:1px solid var(--card-border);background:rgba(255,255,255,0.05);color:var(--text);font-family:'Poppins',sans-serif;">
     <textarea id="messageInput" placeholder="Escreva um recado especial... 💕"></textarea>
     <button onclick="saveMessage()">💌 Enviar Recado</button>
     <div class="message-list" id="messageList"></div>
@@ -3127,22 +3133,40 @@ const db = getDatabase(app);
 const muralRef = ref(db, "muralRecados");
 
 const input = document.getElementById("messageInput");
+const authorInput = document.getElementById("authorInput");
+authorInput.value = localStorage.getItem("muralAuthor") || "";
 const list = document.getElementById("messageList");
 
 window.saveMessage = async function () {
+
   const text = input.value.trim();
+
+  const authorInput = document.getElementById("authorInput");
+
+  const author = authorInput.value.trim() || "Anônimo";
+
   if (!text) return;
 
+  // Salva o nome para não precisar digitar novamente
+  localStorage.setItem("muralAuthor", author);
+
   await push(muralRef, {
-    author: "Pabricio",
-    text,
+
+    author: author,
+
+    text: text,
+
     date: new Date().toLocaleDateString("pt-BR"),
+
     time: new Date().toLocaleTimeString("pt-BR", {
       hour: "2-digit",
       minute: "2-digit"
     }),
+
     edited: false,
+
     createdAt: serverTimestamp()
+
   });
 
   input.value = "";
